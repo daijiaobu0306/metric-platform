@@ -1,0 +1,134 @@
+/* 专屏复用平台主题。旧组件的 metric 变量在工作区内映射到同一套语义色。 */
+.dashboard-workspace {
+  --metric-primary:var(--ui-primary);
+  --metric-primary-hover:var(--ui-primary-strong);
+  --metric-primary-soft:var(--ui-primary-soft);
+  --metric-primary-border:var(--ui-primary-border);
+  --metric-brand-50:var(--ui-primary-soft);
+  --metric-brand-100:var(--ui-primary-border);
+  --metric-brand-500:var(--ui-primary);
+  --metric-brand-600:var(--ui-primary);
+  --metric-brand-700:var(--ui-primary-strong);
+  --metric-canvas:var(--ui-page);
+  --metric-surface-soft:var(--ui-page);
+  --metric-border:var(--ui-border);
+  --metric-border-strong:var(--ui-subtle);
+  --metric-text:var(--ui-heading);
+  --metric-text-secondary:var(--ui-text);
+  --metric-text-muted:var(--ui-subtle);
+  --metric-success:var(--ui-success);
+  --metric-success-soft:var(--ui-success-soft);
+  --metric-warning:var(--ui-warning);
+  --metric-warning-soft:var(--ui-warning-soft);
+  --metric-danger:var(--ui-danger);
+  --metric-danger-soft:var(--ui-danger-soft);
+  --metric-radius:12px;
+  --metric-radius-lg:16px;
+  --metric-shadow-xs:var(--ui-shadow-sm);
+  --metric-shadow-sm:var(--ui-shadow-sm);
+  --metric-shadow-md:var(--ui-shadow-hover);
+}
+.workspace-theme.screen-page.dashboard-workspace { margin:-15px; padding:0 24px 28px; min-height:calc(100% + 30px); background:var(--ui-page); }
+.screen-page.dashboard-workspace > .dashboard-main-tabs > .el-tabs__header { margin:0 -24px 0; padding:14px 24px 0; background:var(--ui-surface); }
+.screen-page.dashboard-workspace .toolbar { margin:0 -24px 20px; padding:20px 24px; border-bottom:1px solid var(--ui-border); background:var(--ui-surface); gap:16px; }
+.screen-page.dashboard-workspace .toolbar h2 { color:var(--ui-heading); font-size:24px; font-weight:750; letter-spacing:-.5px; }
+.screen-page.dashboard-workspace .toolbar .title-block > small { display:block; margin-top:7px; font-size:11px; color:var(--ui-subtle); }
+.screen-page.dashboard-workspace .toolbar .visibility-summary { padding:4px 10px; border:1px solid var(--ui-primary-border); border-radius:20px; background:var(--ui-primary-soft); color:var(--ui-primary-strong); font-size:11px; }
+.screen-page.dashboard-workspace .toolbar .actions { gap:8px; }
+.screen-page.dashboard-workspace .actions > .el-select { width:166px; }
+.screen-page.dashboard-workspace .actions > .refresh-interval { width:132px; }
+.screen-page.dashboard-workspace .actions .el-radio-group { padding:3px; border:1px solid var(--ui-border); border-radius:20px; background:var(--ui-page); }
+.screen-page.dashboard-workspace .actions .el-radio-button__inner { border:0; border-radius:16px; box-shadow:none; background:transparent; color:var(--ui-muted); }
+.screen-page.dashboard-workspace .actions .el-radio-button.is-active .el-radio-button__inner { color:var(--ui-on-primary); background:var(--ui-primary); }
+.screen-page.dashboard-workspace .manager-screen .manager-tabbar,
+.screen-page.dashboard-workspace .supervisor-nav,
+.screen-page.dashboard-workspace .leader-screen .leader-nav { padding:10px 16px; margin-bottom:18px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); box-shadow:var(--ui-shadow-sm); }
+.screen-page.dashboard-workspace .workspace-tabs > .el-tabs__header .el-tabs__item { height:36px; }
+.screen-page.dashboard-workspace .manager-tabbar .workspace-tabs > .el-tabs__header,
+.screen-page.dashboard-workspace .leader-nav .workspace-tabs > .el-tabs__header,
+.screen-page.dashboard-workspace .supervisor-nav .workspace-tabs > .el-tabs__header { margin-bottom:0; }
+.screen-page.dashboard-workspace .manager-tabbar .workspace-tabs .el-tabs__nav,
+.screen-page.dashboard-workspace .leader-nav .workspace-tabs .el-tabs__nav { padding-bottom:4px; }
+.screen-page.dashboard-workspace .supervisor-nav .section-tabs { margin:0; }
+.screen-page.dashboard-workspace .manager-screen .panel,
+.screen-page.dashboard-workspace .leader-screen .leader-panel,
+.screen-page.dashboard-workspace .panel,
+.screen-page.dashboard-workspace .health-observation .score-panel,
+.screen-page.dashboard-workspace .health-observation .trend-panel,
+.screen-page.dashboard-workspace .health-observation .overview-section,
+.screen-page.dashboard-workspace .health-observation .metric-section { padding:20px; border:1px solid var(--ui-border); border-radius:16px; background:var(--ui-surface); box-shadow:var(--ui-shadow-sm); }
+.screen-page.dashboard-workspace .manager-screen .manager-section,
+.screen-page.dashboard-workspace .supervisor-section,
+.screen-page.dashboard-workspace .leader-screen .leader-section { gap:18px; margin-bottom:18px; }
+.screen-page.dashboard-workspace .panel header h3,
+.screen-page.dashboard-workspace .health-observation .section-head h3,
+.screen-page.dashboard-workspace .health-observation .trend-panel h3,
+.screen-page.dashboard-workspace .health-observation .score-panel h3,
+.screen-page.dashboard-workspace .leader-panel h3 { display:flex; align-items:center; gap:9px; color:var(--ui-heading); font-size:14px; font-weight:650; }
+.screen-page.dashboard-workspace .panel header h3::before,
+.screen-page.dashboard-workspace .health-observation .section-head h3::before,
+.screen-page.dashboard-workspace .health-observation .trend-panel h3::before,
+.screen-page.dashboard-workspace .health-observation .score-panel h3::before,
+.screen-page.dashboard-workspace .leader-panel h3::before { content:''; width:5px; height:15px; flex-shrink:0; border-radius:4px; background:var(--ui-primary); }
+.screen-page.dashboard-workspace .health-observation .hero-grid { grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:stretch; gap:14px; }
+.screen-page.dashboard-workspace .health-observation .score-panel > header,
+.screen-page.dashboard-workspace .health-observation .trend-panel > header { padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--ui-border-soft); }
+.screen-page.dashboard-workspace .health-observation .score-copy { flex:1; gap:6px; }
+.screen-page.dashboard-workspace .health-observation .score-copy b { font-size:15px; }
+.screen-page.dashboard-workspace .health-observation .score-copy p { color:var(--ui-muted); font-size:11px; line-height:1.5; }
+.screen-page.dashboard-workspace .health-observation .category-mini { padding:8px 10px; border-radius:9px; }
+.screen-page.dashboard-workspace .health-observation .category-mini small { font-size:10px; }
+.screen-page.dashboard-workspace .health-observation .category-mini b { font-size:15px; font-variant-numeric:tabular-nums; }
+.screen-page.dashboard-workspace .health-observation .category-grid,
+.screen-page.dashboard-workspace .health-observation .subcategory-grid { gap:14px; }
+.screen-page.dashboard-workspace .health-observation .category-card,
+.screen-page.dashboard-workspace .health-observation .subcategory-card { position:relative; padding:16px; gap:10px; border-left-width:1px; border-top:4px solid var(--ui-success); border-radius:12px; }
+.screen-page.dashboard-workspace .health-observation .category-card.warning,
+.screen-page.dashboard-workspace .health-observation .subcategory-card.warning { border-top-color:var(--ui-warning); }
+.screen-page.dashboard-workspace .health-observation .category-card.danger,
+.screen-page.dashboard-workspace .health-observation .subcategory-card.danger { border-top-color:var(--ui-danger); }
+.screen-page.dashboard-workspace .health-observation .category-card.unknown,
+.screen-page.dashboard-workspace .health-observation .subcategory-card.unknown { border-top-color:var(--ui-subtle); }
+.screen-page.dashboard-workspace .health-observation .card-head > span { font-size:13px; }
+.screen-page.dashboard-workspace .health-observation .card-counts { font-size:11px; line-height:1.7; }
+.screen-page.dashboard-workspace .health-observation .metric-chart-card { padding:16px; border-radius:12px; }
+.screen-page.dashboard-workspace .health-card:hover,
+.screen-page.dashboard-workspace .health-card:focus,
+.screen-page.dashboard-workspace .health-card.selected { box-shadow:var(--ui-shadow-hover); transform:none; }
+.screen-page.dashboard-workspace .number { border-color:var(--ui-border); border-radius:12px; box-shadow:var(--ui-shadow-sm); }
+.screen-page.dashboard-workspace .metric-filters { display:flex; flex-wrap:wrap; gap:10px; }
+.screen-page.dashboard-workspace .metric-filters > .el-select { width:156px; }
+.screen-page.dashboard-workspace .metric-filters > .el-input { width:210px; }
+.screen-page.dashboard-workspace .screen-config .config-toolbar { margin-bottom:16px; padding:20px; border:1px solid var(--ui-border); border-radius:14px; background:var(--ui-surface); }
+.screen-page.dashboard-workspace .screen-config .config-toolbar h2 { margin:0; font-size:20px; color:var(--ui-heading); }
+.screen-page.dashboard-workspace .screen-config .config-toolbar p { margin:7px 0 0; color:var(--ui-muted); font-size:12px; line-height:1.7; }
+.screen-page.dashboard-workspace .screen-config .query-bar { padding:14px 16px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); }
+.screen-page.dashboard-workspace .screen-config .table-summary { padding:12px 16px; color:var(--ui-muted); font-size:12px; }
+.screen-page.dashboard-workspace .el-table { border-radius:10px; }
+.dashboard-workspace .el-dialog__body .form-section { border-color:var(--ui-border); border-radius:12px; background:var(--ui-surface); }
+.screen-page.dashboard-workspace button:focus-visible { outline:2px solid var(--ui-primary); outline-offset:3px; }
+@media(max-width:1150px) { .screen-page.dashboard-workspace .health-observation .hero-grid { grid-template-columns:1fr; } }
+@media(max-width:768px) {
+  .workspace-theme.screen-page.dashboard-workspace { margin:-10px; padding:0 14px 20px; }
+  .screen-page.dashboard-workspace > .dashboard-main-tabs > .el-tabs__header { margin:0 -14px; padding:12px 14px 0; }
+  .screen-page.dashboard-workspace .toolbar { margin:0 -14px 14px; padding:16px 14px; }
+  .screen-page.dashboard-workspace .toolbar h2 { font-size:20px; }
+  .screen-page.dashboard-workspace .actions { gap:8px; }
+  .screen-page.dashboard-workspace .health-observation .score-panel,
+  .screen-page.dashboard-workspace .health-observation .trend-panel,
+  .screen-page.dashboard-workspace .manager-screen .panel { padding:16px; }
+  .screen-page.dashboard-workspace .metric-filters > .el-select,
+  .screen-page.dashboard-workspace .metric-filters > .el-input { width:calc(50% - 5px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .screen-page.dashboard-workspace .category-card,
+  .screen-page.dashboard-workspace .subcategory-card { transition:none; transform:none; }
+}
+
+.screen-page.dashboard-workspace .screen-config .query-bar { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.screen-page.dashboard-workspace .screen-config .query-bar .keyword-input { flex:0 1 280px; width:280px; }
+.screen-page.dashboard-workspace .screen-config .query-bar .query-select { flex:0 0 150px; width:150px; }
+.screen-page.dashboard-workspace .screen-config .query-bar .time-picker { flex:0 1 330px; width:330px; max-width:100%; }
+
+.screen-page.dashboard-workspace .health-observation .score-panel,
+.screen-page.dashboard-workspace .health-observation .trend-panel { padding:16px; }

@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 1,
+  "version": "internal_staff-20261027-001",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "abcf3518824d348e7a14913b4e01d590bf052ce3dd8762e21ba8b09ce81f340c",
+    "reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7",
+    "requirements-xlsx.txt": "290af5eae2f37443bbcce5e012d8833e4e91c1863fc754cefdbafdef9005dcf0",
+    "requirements.txt": "335e37e97c9e72b331e30e8919a17cae4754ef34420de137815fc1da86ed788d"
+  },
+  "categoryCode": "metric_g2",
+  "displayName": "对内部人员脚本采集"
+}

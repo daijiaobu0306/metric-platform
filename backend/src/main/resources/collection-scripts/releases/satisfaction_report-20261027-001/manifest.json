@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 1,
+  "version": "satisfaction_report-20261027-001",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "1ce89e6a0684c7fcb894d709139b4165e15ed76598f8a20b5a586b553182a226",
+    "reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7",
+    "requirements-xlsx.txt": "290af5eae2f37443bbcce5e012d8833e4e91c1863fc754cefdbafdef9005dcf0",
+    "requirements.txt": "335e37e97c9e72b331e30e8919a17cae4754ef34420de137815fc1da86ed788d"
+  },
+  "categoryCode": "satisfaction",
+  "displayName": "满意度及投诉服务体验脚本采集"
+}

@@ -1,0 +1,74 @@
+/* 平台侧栏：原型白色导航，仅作用于此布局的导航区域。 */
+.el-aside { background: var(--ui-surface); color: var(--ui-text); border-right: 1px solid var(--ui-border); box-sizing: border-box; transition: width .25s ease; }
+.logo { height: 74px; padding: 0 16px; justify-content: flex-start; gap: 12px; border-bottom: 1px solid #e8eef5; color: var(--ui-heading); }
+.brand-mark { display: flex; align-items: center; justify-content: center; width: 40px; height: 44px; flex-shrink: 0; border-radius: 13px; background: linear-gradient(35deg, var(--ui-primary), #22d3ee); box-shadow: 0 3px 7px #0ea5e926; color: var(--ui-surface); }
+.brand-mark svg { width: 27px; height: 27px; }
+.brand-copy { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 5px; }
+.logo-text { display: block; color: var(--ui-heading); font-size: 17px; line-height: 1.3; font-weight: 700; letter-spacing: -.4px; }
+.brand-subtitle { color: var(--ui-subtle); font-size: 10px; line-height: 1.2; font-weight: 400; letter-spacing: .35px; }
+.collapse-btn { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 26px; height: 30px; padding: 0; border: 0; border-radius: 7px; background: none; color: var(--ui-subtle); font-size: 18px; opacity: 1; cursor: pointer; }
+.collapse-btn:hover { background: #f1f5f9; color: var(--ui-primary); }
+.el-menu-vertical { --el-menu-bg-color: var(--ui-surface); --el-menu-text-color: var(--ui-text); --el-menu-active-color: var(--ui-primary-strong); --el-menu-hover-bg-color: var(--ui-page); padding: 16px 8px; width: auto; min-height: 0; background: var(--ui-surface); scrollbar-width: thin; scrollbar-color: var(--ui-border) transparent; }
+.el-menu-vertical::-webkit-scrollbar { width: 4px; }
+.el-menu-vertical::-webkit-scrollbar-thumb { background: var(--ui-border); border-radius: 4px; }
+.el-menu-vertical :deep(.el-menu-item) { position: relative; height: 46px; line-height: 46px; margin: 4px 0; padding: 0 14px !important; border: 1px solid transparent; border-radius: 12px; color: var(--ui-text); font-weight: 400; transition: background .15s, color .15s; }
+.el-menu-vertical :deep(.el-menu-item span) { font-size: 14px; }
+.el-menu-vertical :deep(.el-menu-item .el-icon) { width: 22px; margin-right: 12px; color: var(--ui-subtle); font-size: 20px; }
+.el-menu-vertical :deep(.el-menu-item:hover) { background: var(--ui-page); color: var(--ui-heading); }
+.el-menu-vertical :deep(.el-menu-item:hover .el-icon) { color: var(--ui-muted); }
+.el-menu-vertical :deep(.el-menu-item.is-active) { background: var(--ui-primary-soft); border-color: #e0f2fe; color: var(--ui-primary-strong); font-weight: 600; box-shadow: 0 1px 2px #0ea5e90d; }
+.el-menu-vertical :deep(.el-menu-item.is-active .el-icon) { color: var(--ui-primary); }
+.el-menu-vertical :deep(.el-menu-item.is-active::before) { content: ''; position: absolute; left: -1px; top: 9px; bottom: 9px; width: 4px; border-radius: 0 4px 4px 0; background: var(--ui-primary); }
+.menu-section-divider { background: #e8eef5; margin: 18px 14px 14px; }
+.menu-section-divider span { background: var(--ui-surface); color: var(--ui-subtle); font-size: 10px; letter-spacing: .5px; }
+.alarm-badge { top: 50%; right: 12px; transform: translateY(-50%); min-width: 24px; height: 24px; line-height: 24px; padding: 0 6px; border-radius: 20px; background: #f43f5e; box-shadow: 0 2px 5px #f43f5e26; font-size: 11px !important; font-weight: 700; }
+.alarm-badge:hover { background: var(--ui-danger); }
+.scan-warning-dot { margin-left: auto; width: 7px; height: 7px; background: #f43f5e; }
+/* 侧栏底部工具栏：铃铛等全局工具入口，居中排列；后续工具按钮追加到同一行即可。 */
+.sidebar-tools { display: flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0; padding: 8px 10px; border-top: 1px solid #e8eef5; background: #fbfcfe; }
+.sidebar-tools.is-collapsed { padding: 8px 4px; }
+.sidebar-user { position: relative; margin: 0; padding: 14px 10px; border-top: 1px solid #e8eef5; background: #fbfcfe; cursor: default; }
+.sidebar-user:hover { background: #fbfcfe; }
+.user-card { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px; border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-surface); box-shadow: 0 1px 2px #0f172a03; color: var(--ui-text); cursor: pointer; text-align: left; font: inherit; }
+.user-card:hover { border-color: var(--ui-primary-border); background: #fafeff; }
+.user-avatar { display: flex; align-items: center; justify-content: center; width: 36px; height: 40px; flex-shrink: 0; border: 1px solid var(--ui-primary-border); border-radius: 10px; background: #e0f2fe; color: var(--ui-primary-strong); font-size: 14px; font-weight: 700; line-height: 1; white-space: nowrap; overflow: hidden; box-sizing: border-box; }
+.user-card-info { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 6px; }
+.user-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-width: 0; color: var(--ui-heading); }
+.user-name { flex: 0 1 auto; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 700; }
+.user-role { padding: 1px 5px; border-radius: 4px; background: #f1f5f9; color: var(--ui-muted); font-size: 10px; line-height: 1.4; }
+.login-duration { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; margin: 0; padding: 0; color: #059669; font-size: 10px; line-height: 1.5; }
+.session-dot { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: #10b981; }
+.dropdown-arrow { margin-left: auto; color: var(--ui-subtle); }
+.user-dropdown { bottom: calc(100% - 5px); left: 10px; right: 10px; padding: 5px; border: 1px solid var(--ui-border); border-radius: 10px; background: var(--ui-surface); box-shadow: 0 8px 28px #0f172a1a; }
+.dropdown-item { width: 100%; padding: 10px; border: 0; border-radius: 6px; background: var(--ui-surface); color: var(--ui-text); font: inherit; font-size: 12px; text-align: left; }
+.dropdown-item:hover { background: var(--ui-primary-soft); color: var(--ui-primary-strong); }
+.logout-item:hover { background: var(--ui-danger-soft); color: var(--ui-danger); }
+.collapse-btn:focus-visible, .user-card:focus-visible, .dropdown-item:focus-visible { outline: 2px solid var(--ui-primary); outline-offset: 2px; }
+/* 折叠态保留品牌、提示角标与可操作的用户菜单。 */
+.el-aside.is-collapsed .logo { height: 90px; padding: 10px 0; flex-direction: column; gap: 4px; }
+.el-aside.is-collapsed .brand-mark { width: 34px; height: 36px; border-radius: 10px; }
+.el-aside.is-collapsed .brand-mark svg { width: 24px; height: 24px; }
+.el-aside.is-collapsed .collapse-btn { height: 24px; font-size: 16px; }
+.el-menu-vertical.el-menu--collapse :deep(.el-menu-item) { padding: 0 !important; }
+.el-menu-vertical.el-menu--collapse :deep(.el-menu-item .el-tooltip__trigger) { width: 100%; height: 100%; }
+.el-menu-vertical.el-menu--collapse :deep(.el-menu-item .el-icon) { margin: 0; }
+.el-menu-vertical.el-menu--collapse :deep(.alarm-badge) { top: 1px; right: 0; transform: none; min-width: 15px; height: 16px; line-height: 16px; padding: 0 3px; font-size: 9px !important; }
+.sidebar-user.is-collapsed { padding: 12px 6px; }
+.sidebar-user.is-collapsed .user-card { justify-content: center; padding: 4px; border: 0; background: none; box-shadow: none; }
+.sidebar-user.is-collapsed .user-dropdown { left: 4px; right: 4px; padding: 3px; }
+.sidebar-user.is-collapsed .dropdown-item { justify-content: center; flex-direction: column; gap: 4px; padding: 9px 0; font-size: 10px; }
+@media (max-width: 767px) { .collapse-btn { display: flex; } }
+/* 桌面展开态收窄横向留白，保留菜单字号、行高及折叠态操作空间。 */
+@media (min-width: 768px) {
+  .el-aside:not(.is-collapsed) .logo { padding:0 12px; gap:8px; }
+  .el-aside:not(.is-collapsed) .brand-mark { width:36px; height:40px; border-radius:11px; }
+  .el-aside:not(.is-collapsed) .logo-text { font-size:16px; white-space:nowrap; }
+  .el-aside:not(.is-collapsed) .brand-subtitle { font-size:9px; letter-spacing:.2px; white-space:nowrap; }
+  .el-aside:not(.is-collapsed) .collapse-btn { width:24px; }
+  .el-aside:not(.is-collapsed) .el-menu-vertical :deep(.el-menu-item) { padding:0 12px !important; }
+  .el-aside:not(.is-collapsed) .el-menu-vertical :deep(.el-menu-item .el-icon) { margin-right:10px; }
+  .el-aside:not(.is-collapsed) .sidebar-user { padding:12px 8px; }
+  .el-aside:not(.is-collapsed) .user-card { padding:8px; gap:8px; }
+  .el-aside:not(.is-collapsed) .user-avatar { width:32px; height:36px; }
+}
+@media (prefers-reduced-motion: reduce) { .el-aside, .el-menu-vertical :deep(.el-menu-item) { transition: none; } .scan-warning-dot { animation: none; } }

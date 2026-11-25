@@ -1,0 +1,80 @@
+# ============================================================
+# metric-code 统一入口 —— 复用 67 上已有的 nginx
+#
+# 由 install-nginx.sh 生成（占位符已替换为真实值），不要手工改端口。
+# 安装方式：放到 /etc/nginx/conf.d/metric-code.conf，再 nginx -t && nginx -s reload
+#
+# 一个端口同时提供：前端静态（/metric-code/）+ 后端 API 反代（/metric-code/api/）
+# ============================================================
+
+server {
+    listen       __NGINX_PORT__;
+    server_name  _;
+
+    charset utf-8;
+    client_max_body_size 100M;
+
+    access_log __LOG_DIR__/metric-code-access.log;
+    error_log  __LOG_DIR__/metric-code-error.log warn;
+
+    # 前端静态文件目录：$WWW_ROOT/metric-code 是指向包内 frontend/ 的软链，
+    # 用 root 让 URI 前缀与磁盘路径严格对齐（alias + try_files 在深层路由会内部重定向循环）
+    location /metric-code/assets/ {
+        root __WWW_ROOT__;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # 前端入口与 SPA history 回退
+    location /metric-code/ {
+        root __WWW_ROOT__;
+        index index.html;
+        try_files $uri $uri/ /metric-code/index.html;
+    }
+
+    # 后端 API 反代：/metric-code/api/* → 127.0.0.1:__APP_PORT__/api/*
+    location /metric-code/api/ {
+        proxy_pass http://127.0.0.1:__APP_PORT__/api/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+
+        proxy_connect_timeout 60s;
+        proxy_send_timeout    300s;
+        proxy_read_timeout    300s;
+
+        proxy_buffering off;
+        proxy_request_buffering off;
+    }
+
+    # SSO 跳转入口与回调必须转给后端，否则会被 try_files 当成 SPA 路由返回 index.html
+    location /oauth2/ {
+        proxy_pass http://127.0.0.1:__APP_PORT__;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+    }
+
+    location /login/oauth2/ {
+        proxy_pass http://127.0.0.1:__APP_PORT__;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+    }
+
+    # 根路径直接跳到应用入口
+    location = / {
+        return 302 /metric-code/;
+    }
+}

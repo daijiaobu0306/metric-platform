@@ -1,0 +1,155 @@
+server:
+  port: ${SERVER_PORT:18080}
+  # 让 400/409 的响应体带上具体原因（校验失败时前端能直接看到哪条规则没过）
+  error:
+    include-message: always
+  # 让 Spring 信任 vite proxy / nginx 转发的 X-Forwarded-* 头（fix silent SSO redirect_uri 缺端口）
+  forward-headers-strategy: framework
+  tomcat:
+    uri-encoding: UTF-8
+    max-swallow-size: 100MB
+
+spring:
+  application:
+    name: metric-code
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # 数据库配置
+  #   - dev: 默认连本机 MySQL，密码与开发环境保持一致
+  #   - prod/Docker: 通过环境变量 SPRING_DATASOURCE_URL/USERNAME/PASSWORD 覆盖
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/system_operations_metrics?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Flyway 数据库迁移
+  #   - 已有 34 个迁移文件位于 db/migration/，当前生产数据库现状对齐 V33
+  #   - baseline-on-migrate=true：在已有数据的库上首次启动时自动创建 flyway_schema_history
+  #   - baseline-version=33：现状视为 V33，V1~V33（含 V31.1、V32.1）都不会重复执行
+  #   - 后续新增 SQL 从 V34 开始命名
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 33
+    baseline-description: "baseline before flyway adoption"
+    validate-on-migrate: true
+
+  # JPA配置
+  #   - ddl-auto: validate（Flyway 接管 schema 后，Hibernate 只校验实体与表是否一致，不再自动改表）
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    # 默认不打印 SQL（show-sql 强制覆盖 logger 级别，必须改这里）
+    # 调试时改成 true 即可看到
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  # 静态资源映射
+  web:
+    resources:
+      static-locations:
+        - /uploads/
+
+  # OIDC 统一认证客户端（P3 引入）
+  # ---------------------------------------------------------------
+  # 【生产内网部署：完全不使用环境变量时，只改下面 6 个值 + frontend-base-url】
+  #   1) registration.sso.client-id       UM 服务管理里给本应用建的服务 ID
+  #   2) registration.sso.client-secret   UM 上登记的 Secret（UM 限制 ≤48 位）
+  #   3) provider.sso.authorization-uri   http://<UM内网IP>:7200/usermanager/oauth/authorize
+  #   4) provider.sso.token-uri           http://<UM内网IP>:7200/usermanager/oauth/token
+  #   5) provider.sso.jwk-set-uri         http://<UM内网IP>:7200/usermanager/oauth2/jwks
+  #   6) provider.sso.user-info-uri       http://<UM内网IP>:7200/usermanager/user/me
+  #   +) app.sso.frontend-base-url        同源反代（nginx 同域）留空，前后端分域才填完整前缀
+  #
+  # 写法：保留 ${环境变量:默认值} 结构，只替换冒号后面的"默认值"。
+  #   - 运维若仍用环境变量 → 环境变量优先级更高，会自动覆盖这里，现有流程不受影响
+  #   - 运维完全不用环境变量 → 这里的默认值直接生效，无需额外配置文件、无需改启动脚本
+  #
+  # 注意：
+  #   - client-id 保持 placeholder- 前缀时视为"未接入"，登录页只显示本地账号登录（安全兜底）
+  #   - scope 必须留空：UM 4.0.10 的 client 没有 scope，带非空 scope 会让 authorize 直接 500
+  #   - jwk-set-uri 真实路径是 /oauth2/jwks，写成 .well-known/jwks.json 会 403
+  #   - 以上值都是启动期绑定，改完必须重启后端（重新发版或重启进程）
+  #   - 不要改 system_config 表里的 sso.*，Spring Security 不读库，改了也不生效
+  # ---------------------------------------------------------------
+  security:
+    oauth2:
+      client:
+        registration:
+          sso:
+            # 【生产内网改这里①】UM 服务管理里给本应用建的服务 ID
+            client-id: ${SSO_OIDC_CLIENT_ID:placeholder-client-id}
+            # 【生产内网改这里②】与 UM 上登记的 Secret 完全一致（≤48 位）
+            client-secret: ${SSO_OIDC_CLIENT_SECRET:placeholder-client-secret}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/sso"
+            scope: ${SSO_OIDC_SCOPE:}
+            client-name: sso
+        provider:
+          sso:
+            # 【生产内网改这里③④】必须是"后端进程"和"用户浏览器"都能访问的地址，
+            # 内网用 UM 的内网 IP / 内网域名，禁止写 localhost 或 127.0.0.1
+            authorization-uri: ${SSO_AUTH_URI:http://127.0.0.1:7200/usermanager/oauth/authorize}
+            token-uri: ${SSO_TOKEN_URI:http://127.0.0.1:7200/usermanager/oauth/token}
+            # 【生产内网改这里⑤】真实路径是 /oauth2/jwks（.well-known/jwks.json 会 403）
+            jwk-set-uri: ${SSO_JWKS_URI:http://127.0.0.1:7200/usermanager/oauth2/jwks}
+            # 【生产内网改这里⑥】
+            user-info-uri: ${SSO_USERINFO_URI:http://127.0.0.1:7200/usermanager/user/me}
+            user-name-attribute: sub
+
+logging:
+  level:
+    com.metric: INFO
+    # 默认不打印 SQL（WARN 级别，只看警告/错误），调试时改成 DEBUG
+    org.hibernate.SQL: WARN
+
+# SSO 访问链接（/api/sso/access-link）跳转目标配置
+#   - 默认为空：同源部署（nginx 反代 / 同域）时重定向走相对路径 /metric-code/xxx
+#   - 前后端分域/分端口时，才把 frontend-base-url 填成完整前缀（如 http://10.1.2.3）
+#   - 本地开发由 deploy/config/.env.local 的 SSO_FRONTEND_BASE_URL 覆盖为 http://localhost:28080
+app:
+  # 允许的跨域来源（逗号分隔，无结尾斜杠）。经反向代理/多层代理访问时必填，
+  # 否则 POST 会被判为跨域并返回 403 "Invalid CORS request"（表现为登录失败）。
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:}
+  sso:
+    frontend-callback-path: ${SSO_FRONTEND_CALLBACK_PATH:/metric-code/sso/callback}
+    # 【生产内网改这里⑦】同源反代保持留空；前后端分域才填完整前缀
+    frontend-base-url: ${SSO_FRONTEND_BASE_URL:}
+    default-target: ${SSO_DEFAULT_TARGET:/metric-code/}
+    frontend-login-path: ${SSO_FRONTEND_LOGIN_PATH:/metric-code/login}
+    sync:
+      enabled: ${SSO_SYNC_ENABLED:false}
+      fixed-delay-ms: ${SSO_SYNC_DELAY_MS:3600000}
+      api-base-url: ${SSO_SYNC_API_BASE_URL:}
+      api-token: ${SSO_SYNC_API_TOKEN:}
+
+# OIDC 统一认证客户端（P3 引入）
+#   - 端点默认指向本地 mock IdP（http://127.0.0.1:7200/usermanager）
+#   - 生产部署时通过 SSO_OIDC_CLIENT_ID / SSO_OIDC_CLIENT_SECRET / SSO_AUTH_URI / SSO_TOKEN_URI 等
+#     环境变量覆盖；V42 在 system_config 表里也提供了同名 key，但 Spring Security 仅启动期绑定，
+#     所以 system_config 的值不会自动生效（需要重启后端）
+#   - 启动期不会主动请求 IdP；只有真正走 /oauth2/authorization/sso 时才会用 jwk-set-uri
+# 上传文件基础目录
+#   - dev (Mac): 通过 UPLOAD_BASE_PATH 环境变量或保留默认值
+#   - Docker 容器: 默认 /app/files（容器内标准路径，宿主机通过 volume 挂载）
+#   - 也可通过 CLI 参数 --upload.base-path=... 注入
+upload:
+  base-path: ${UPLOAD_BASE_PATH:/app/files}
+
+# 脚本技能配置
+script:
+  python:
+    path: ${SCRIPT_PYTHON_PATH:python3}
+  execution:
+    timeout: ${SCRIPT_EXECUTION_TIMEOUT:60}

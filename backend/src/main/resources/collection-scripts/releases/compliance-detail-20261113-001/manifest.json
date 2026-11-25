@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 1,
+  "version": "compliance-detail-20261113-001",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "249bc07fcd79527d679c0a8b48703f0845d3e11b1d8a513a5c186c7b1eb8327a",
+    "profile.json": "3243859801845fcaca13a158b1a5156d5b57be4926e76004c04ed146598f2335",
+    "reader.py": "76b24661428437b574d42487241932d6dc48b02871c353aba87b4ea99faf1d3c",
+    "requirements.txt": "d935b424dc7282d8a62b1148b2ab7b94388f4cd7cae0559ef4a7ce4777d9fa1f"
+  },
+  "categoryCode": "metric_g1",
+  "displayName": "合规管理工单明细采集"
+}

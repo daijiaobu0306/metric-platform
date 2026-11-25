@@ -1,0 +1,8 @@
+# Linux 脚本统一使用 LF。
+*.py text eol=lf
+*.sh text eol=lf
+deploy/scripts/** text eol=lf
+deploy/config/*.example text eol=lf
+
+# 发行版逐字节匹配清单；放在通用规则之后，避免覆盖 -text。
+backend/src/main/resources/collection-scripts/releases/** -text -eol whitespace=cr-at-eol

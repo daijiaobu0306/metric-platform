@@ -1,0 +1,90 @@
+# ============================================================
+# Docker 构建上下文排除清单
+#   - 排除构建产物、IDE 配置、运行时数据、前端代码、git 历史
+#   - 显著加快 docker build 上下文传输速度
+# ============================================================
+
+# Maven / Java 构建产物
+backend/target/*
+*.class
+*.jar
+*.war
+!backend/target/metric-code.jar
+# appuser-agent 监控探针包内 jar 例外（必须进入 Docker 构建上下文，Dockerfile 会 COPY 到 /opt/appuser-agent）
+!deploy/appuser-agent/**/*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# 前端源码（前端镜像需要 frontend/dist，只排除源码和依赖）
+frontend/src/
+frontend/node_modules/
+frontend/public/
+frontend/*.js
+frontend/*.json
+frontend/*.html
+frontend/*.ts
+deploy/frontend/
+deploy/frontend-only-*.tar.gz
+
+# 部署历史归档
+deploy/*.tar.gz
+deploy/*.zip
+
+# 应用运行时数据
+metric_backups/
+uploads/
+files/
+logs/
+*.log
+
+# Mac/Win 系统垃圾
+.DS_Store
+Thumbs.db
+
+# Node（如果根目录有遗留）
+node_modules/
+package-lock.json
+
+# Claude / 开发工具
+.claude/
+.cursor/
+
+# 文档与脚本（构建不需要）
+doc/
+*.md
+!README.md
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时/备份
+*.tmp
+*.bak
+*~
+
+# Environment configuration and database exports are not image inputs
+deploy/config/.env*
+deploy/db_export/
+
+# Only the tracked bootstrap and backup ledger are immutable upgrade inputs.
+# Runtime snapshots and environment files must remain outside the image.
+!deploy/db_export/
+deploy/db_export/*
+!deploy/db_export/bootstrap/
+!deploy/db_export/bootstrap/**
+!doc/
+doc/**
+!doc/数据库版本记录.md

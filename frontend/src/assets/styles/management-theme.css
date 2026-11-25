@@ -1,0 +1,36 @@
+/* 多管理页面共用的结构皮肤，避免每页重复定义表格、卡片和表单。 */
+.workspace-management { margin:-15px; min-height:calc(100% + 30px); padding:0; background:var(--ui-page); color:var(--ui-text); }
+.management-tabs { padding:20px 24px 24px; }
+.workspace-management .el-card { border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); box-shadow:var(--ui-shadow-sm); }
+.workspace-management .el-card__header { padding:18px 20px; border-bottom:1px solid var(--ui-border-soft); }
+.workspace-management .el-card__body { padding:20px; }
+.workspace-management .el-table .cell { padding-left:12px; padding-right:12px; }
+.workspace-management .el-table__body tr:hover > td { background:var(--ui-primary-soft); }
+.workspace-management .el-button { font-weight:500; }
+.workspace-management .el-button + .el-button { margin-left:0; }
+.workspace-management .el-form-item__label { color:var(--ui-muted); font-size:12px; }
+.workspace-management .el-input__wrapper, .workspace-management .el-select__wrapper, .workspace-management .el-textarea__inner { background:var(--ui-field); }
+.workspace-management .el-descriptions__label.el-descriptions__cell { background:var(--ui-page); color:var(--ui-muted); }
+.workspace-management .card-header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; color:var(--ui-heading); font-size:14px; font-weight:600; }
+.workspace-management .el-tab-pane > .el-card + .el-card { margin-top:20px; }
+.insight-title { margin:0 0 16px; font-size:14px; color:var(--ui-heading); font-weight:600; }
+.workspace-detail-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; margin:0; padding:20px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-page); }
+.workspace-detail-grid > div { min-width:0; }
+.workspace-detail-grid dt { color:var(--ui-subtle); font-size:12px; margin-bottom:7px; }
+.workspace-detail-grid dd { margin:0; color:var(--ui-text); font-size:13px; line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; }
+.workspace-detail-grid .field-wide { grid-column:1 / -1; padding-top:14px; border-top:1px solid var(--ui-border); }
+.workspace-theme.el-dialog { max-height:92vh; display:flex; flex-direction:column; }
+.workspace-theme.el-dialog .el-dialog__header, .workspace-theme.el-dialog .el-dialog__footer { flex-shrink:0; }
+.workspace-theme.el-dialog .el-dialog__body { min-height:0; overflow:auto; }
+@media(max-width:768px) { .workspace-management { margin:-10px; min-height:calc(100% + 20px); } .management-tabs { padding:12px 16px 16px; } .workspace-management .el-card__body { padding:14px; } .workspace-detail-grid { grid-template-columns:repeat(2,minmax(0,1fr)); padding:14px; gap:14px; } }
+.management-tab-label { display:inline-flex; align-items:center; gap:8px; }
+.management-tab-count { padding:1px 7px; border-radius:12px; background:var(--ui-border-soft); color:var(--ui-muted); font-size:10px; line-height:1.5; }
+.workspace-tabs .el-tabs__item.is-active .management-tab-count { background:var(--ui-primary-soft); color:var(--ui-primary-strong); }
+.workspace-management .el-radio-group:has(> .el-radio-button) { padding:3px; border-radius:8px; background:var(--ui-page); }
+.workspace-management .el-radio-button__inner { border:0; border-radius:6px !important; background:transparent; color:var(--ui-muted); box-shadow:none; font-size:12px; }
+.workspace-management .el-radio-button.is-active .el-radio-button__inner { color:var(--ui-primary-strong); background:var(--ui-surface); box-shadow:var(--ui-shadow-sm); }
+.reminder-status-dot { display:inline-block; width:6px; height:6px; margin-right:6px; border-radius:50%; background:var(--ui-subtle); }
+.reminder-status-dot.enabled { background:var(--ui-success); animation:management-reminder-pulse 2s ease-in-out infinite; }
+@media(prefers-reduced-motion:reduce) { .reminder-status-dot.enabled { animation:none; } }
+
+@keyframes management-reminder-pulse { 50% { opacity:.45; box-shadow:0 0 0 3px color-mix(in srgb,var(--ui-success) 10%,transparent); } }

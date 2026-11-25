@@ -1,0 +1,83 @@
+{
+  "category": "internal_staff",
+  "tasks": [
+    {
+      "db_type": "mysql",
+      "sql": "select business_name as `业务名称`, step_name as `步骤名称`, sum(count) as `访问量`, round(avg(average_deal_time)/1000001,2) as `平均时长(秒)`   from business_step_stat_h where system_name = 'CRM营业厅' and business_name like '%查询%' and step_name like '%页面%' and create_time >= DATE_SUB(NOW(), interval 1 HOUR) and average_deal_time < 30000000 group by business_name , step_name  having sum(count) > 50 order by `平均时长(秒)` desc;",
+      "kind": "jdbc",
+      "dataset": "查询类-页面加载"
+    },
+    {
+      "db_type": "mysql",
+      "sql": "select business_name as \"业务名称\", step_name as \"步骤名称\", sum(count) as \"访问量\", round(avg(average_deal_time)/1000000,2) as `平均时长(秒)` from business_step_stat_h where system_name = 'CRM营业厅' and business_name like '%查询%' and step_name like \"%E\" and create_time >= DATE_SUB(NOW(), interval 1 HOUR) and average_deal_time < 30000000 group by business_name, step_name having sum(count) > 50 order by `平均时长(秒)` desc;",
+      "kind": "jdbc",
+      "dataset": "查询类-查询时长"
+    },
+    {
+      "db_type": "mysql",
+      "sql": "select business_name as \"业务名称\", step_name as \"步骤名称\", identify_character as \"步骤URL\", sum(count) as \"访问量\", round(sum(average_deal_time * count)/sum(count)/1000000,2) as `步骤响应耗时(秒)`, round(sum(average_client_free_time * count)/sum(count)/1000000,2) as \"操作间隔时长(秒)\" from business_step_stat_h where system_name = 'CRM营业厅' and business_name not like '%查询%'  and business_name not in (\"专线卫士产品订购\",\"互联网专线开通-NPON3\",\"互联网专线开通-NPON2\",\"互联网专线开通(NPON)\",\"互联网专线开通-PON3\",\"互联网专线开通-PON2\",\"互联网专线开通-PON1\",\"集团通信费统付产品开通\",\"互联网专线开通(PON)\",\"互联网专线开通-NPON1\",\"集团通信费统付产品退订\",\"移动云产品退订\",\"移动云产品开通\",\"小微宽带融合产品开通\",\"集团彩铃退订\",\"集团彩铃开通\",\"集团V网VPN产品开通\")  and identify_character not like '/api/chbn/%' and create_time >= DATE_SUB(NOW(), interval 1 HOUR) and average_deal_time < 30000000 group by business_name, step_name, identify_character having sum(count) > 50 order by `步骤响应耗时(秒)` desc;",
+      "kind": "jdbc",
+      "dataset": "办理类-单业务-步骤时长"
+    },
+    {
+      "db_type": "mysql",
+      "sql": "SELECT business_name AS \"业务名称\", COUNT(DISTINCT step_name) AS `办理按钮总数(步骤数)` FROM business_step_stat_h WHERE system_name = 'CRM营业厅' AND business_name NOT LIKE '%查询%' AND identify_character not LIKE '/api/chbn/%' and business_name not in (\"专线卫士产品订购\",\"互联网专线开通-NPON3\",\"互联网专线开通-NPON2\",\"互联网专线开通(NPON)\",\"互联网专线开通-PON3\",\"互联网专线开通-PON2\",\"互联网专线开通-PON1\",\"集团通信费统付产品开通\",\"互联网专线开通(PON)\",\"互联网专线开通-NPON1\",\"集团通信费统付产品退订\",\"移动云产品退订\",\"移动云产品开通\",\"小微宽带融合产品开通\",\"集团彩铃退订\",\"集团彩铃开通\",\"集团V网VPN产品开通\")  and  create_time >= DATE_SUB(NOW(), interval 1 HOUR) AND average_deal_time < 30000000 GROUP BY business_name HAVING SUM(count) > 50 and COUNT(DISTINCT step_name) > 0  ORDER BY `办理按钮总数(步骤数)` DESC;",
+      "kind": "jdbc",
+      "dataset": "办理类-单业务-办理按钮总数"
+    },
+    {
+      "db_type": "mysql",
+      "sql": "select business_name as \"业务名称\", step_name as \"步骤名称\", identify_character as \"步骤URL\", sum(count) as \"访问量\", round(sum(average_deal_time * count)/sum(count)/1000000,2) as `步骤响应耗时(秒)`, round(sum(average_client_free_time * count)/sum(count)/1000000,2) as \"操作间隔时长(秒)\" from business_step_stat_h where system_name = 'CRM营业厅' and business_name not like '%查询%' and business_name not in (\"专线卫士产品订购\",\"互联网专线开通-NPON3\",\"互联网专线开通-NPON2\",\"互联网专线开通(NPON)\",\"互联网专线开通-PON3\",\"互联网专线开通-PON2\",\"互联网专线开通-PON1\",\"集团通信费统付产品开通\",\"互联网专线开通(PON)\",\"互联网专线开通-NPON1\",\"集团通信费统付产品退订\",\"移动云产品退订\",\"移动云产品开通\",\"小微宽带融合产品开通\",\"集团彩铃退订\",\"集团彩铃开通\",\"集团V网VPN产品开通\") and identify_character like '/api/chbn/%' and create_time >= DATE_SUB(NOW(), interval 1 HOUR) and average_deal_time < 30000000 group by business_name, step_name, identify_character having sum(count) > 50 order by  `步骤响应耗时(秒)` desc;",
+      "kind": "jdbc",
+      "dataset": "办理类-融合业务-步骤时长"
+    },
+    {
+      "db_type": "mysql",
+      "sql": "SELECT business_name AS \"业务名称\", COUNT(DISTINCT step_name) AS `办理按钮总数(步骤数)`   FROM business_step_stat_h WHERE system_name = 'CRM营业厅' AND business_name NOT LIKE '%查询%' AND identify_character LIKE '/api/chbn/%' and business_name not in (\"专线卫士产品订购\",\"互联网专线开通-NPON3\",\"互联网专线开通-NPON2\",\"互联网专线开通(NPON)\",\"互联网专线开通-PON3\",\"互联网专线开通-PON2\",\"互联网专线开通-PON1\",\"集团通信费统付产品开通\",\"互联网专线开通(PON)\",\"互联网专线开通-NPON1\",\"集团通信费统付产品退订\",\"移动云产品退订\",\"移动云产品开通\",\"小微宽带融合产品开通\",\"集团彩铃退订\",\"集团彩铃开通\",\"集团V网VPN 产品开通\")  and create_time >= DATE_SUB(NOW(), interval 1 HOUR) AND average_deal_time < 30000000 GROUP BY business_name HAVING SUM(count) > 50 and COUNT(DISTINCT step_name) > 0 ORDER BY  `办理按钮总数(步骤数)`  DESC;",
+      "kind": "jdbc",
+      "dataset": "办理类-融合业务-办理按钮总数"
+    },
+    {
+      "days_ago": 1,
+      "handler": "business_duration",
+      "payload": {
+        "statisticsType": 0,
+        "statistics": [
+          "system_resource_id",
+          "business_id",
+          "completion_state",
+          "business_name",
+          "system_resource_id"
+        ],
+        "systemId": "2be5e2e6-db53-486a-8e35-bab0bfca6481",
+        "businessId": null,
+        "timeRange": null,
+        "endTime": null,
+        "startTime": null,
+        "dataMap": "{\"completion_state\":\"1\"}",
+        "confirmDataMap": "{\"system_resource_id\":\"2be5e2e6-db53-486a-8e35-bab0bfca6481\"}",
+        "businessType": null,
+        "segmentId": null,
+        "stepId": null,
+        "identify_character": null,
+        "total": 0,
+        "pageSize": 250,
+        "pageNum": 1,
+        "prop": "accessCount",
+        "order": "desc"
+      },
+      "fields": {
+        "business_name": "业务名称",
+        "accessCount": "办理量",
+        "dealTime": "全程办理时长(秒)",
+        "clientFreeTime": "全程操作间隔时长(秒)",
+        "responseTime": "全程服务耗时(秒)"
+      },
+      "exclude_keywords": [
+        "查询"
+      ],
+      "kind": "bpm",
+      "dataset": "业务全程办理时长"
+    }
+  ]
+}

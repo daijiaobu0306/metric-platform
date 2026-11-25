@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 1,
+  "version": "plan_execution-20261027-001",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "c02ba8e4076b60c6e73bcd66dfb75d78ecb397157f6f00d71e5e2325718356e2",
+    "reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7",
+    "requirements-xlsx.txt": "290af5eae2f37443bbcce5e012d8833e4e91c1863fc754cefdbafdef9005dcf0",
+    "requirements.txt": "335e37e97c9e72b331e30e8919a17cae4754ef34420de137815fc1da86ed788d"
+  },
+  "categoryCode": "metric_g4",
+  "displayName": "计划执行脚本采集"
+}

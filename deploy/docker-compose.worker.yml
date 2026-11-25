@@ -1,0 +1,23 @@
+# Optional override: same files mount as the backend, same service credential.
+# docker compose --project-directory . -f deploy/docker-compose.dev.yml -f deploy/docker-compose.worker.yml up -d --build
+services:
+  backend:
+    environment:
+      COLLECTION_WORKER_TOKEN: ${COLLECTION_WORKER_TOKEN:?Set COLLECTION_WORKER_TOKEN}
+    volumes:
+      - ${HOST_FILES_PATH:?Set HOST_FILES_PATH to the same files mount as backend}:/app/files
+  collection-worker:
+    image: ${COLLECTION_WORKER_IMAGE:-metric-collection-worker:stdlib}
+    build:
+      context: .
+      dockerfile: ${COLLECTION_WORKER_DOCKERFILE:-deploy/docker/Dockerfile.collection-worker}
+    restart: unless-stopped
+    environment:
+      COLLECTION_WORKER_API: http://backend:18080
+      COLLECTION_WORKER_TOKEN: ${COLLECTION_WORKER_TOKEN:?Set COLLECTION_WORKER_TOKEN}
+      COLLECTION_WORKER_ID: compose-worker
+    volumes:
+      - ${HOST_FILES_PATH:?Set HOST_FILES_PATH to the same files mount as backend}:/app/files
+    depends_on:
+      backend:
+        condition: service_started

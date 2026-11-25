@@ -1,0 +1,18 @@
+{
+  "protocolVersion": 1,
+  "version": "running_efficiency-production-20261116-001",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "94dd81bbb9a9c9e4bd70da49c4b26573110b4aafb7d2737abfd706500130252f",
+    "connections.example.json": "14dbc06484fde219ee9d99726cfe1ddf8b54151cbbcd095ebb1f5b091a5ea64b",
+    "profile.json": "26c716122355ac40b65d8b770a2894eba1ea203f041bfdfe390fd78775c1e93a",
+    "reader.py": "2c7ea6a64809795e8d425cc2b142fce97b33ecd042c95f68d933f13138b9dcd8",
+    "requirements-source.txt": "583476c5416c54185d7368b5313eb9aac0985e20ab6c44131e878851b9ded1e1",
+    "requirements.txt": "8f3e729326d13d63ace23fa36b1f18f1851f995d50e3cde5578e131965dfc0ae",
+    "source_export.py": "2eb5338f69ceec4767e88ae75b8f6fdfd6ed72e701a47e60fdc54d010a17b2b6",
+    "sources.json": "e1056b0624dfbc9e8e84ab327a92cc136c367c58eb0600d0f6d7f2c0c6bd8ddb",
+    "standard_reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7"
+  },
+  "categoryCode": "system_run",
+  "displayName": "运行效率脚本采集"
+}

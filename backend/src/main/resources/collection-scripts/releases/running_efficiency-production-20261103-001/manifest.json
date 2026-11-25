@@ -1,0 +1,16 @@
+{
+  "protocolVersion": 1,
+  "version": "running_efficiency-production-20261103-001",
+  "entry": "reader.py",
+  "categoryCode": "system_run",
+  "displayName": "运行效率生产CSV采集",
+  "files": {
+    "config.json": "da804f406c0e1cfe4ada330b3e1784b46d619ec6392978961f1418579d4a8030",
+    "reader.py": "b1cacf4a827e8eb084037adfe19bba69cf0b79d2d0ccd2f173728c5232689eeb",
+    "requirements-source.txt": "583476c5416c54185d7368b5313eb9aac0985e20ab6c44131e878851b9ded1e1",
+    "requirements.txt": "8f3e729326d13d63ace23fa36b1f18f1851f995d50e3cde5578e131965dfc0ae",
+    "source_export.py": "fd0b7e8aba527d973b669adc90bfdd6fb69dfab708062b2118e2ec4db7a37648",
+    "sources.json": "837d0ff98e8bf7eca6dcbc302bdb1c28522d74393e680263ca98b55306c53f27",
+    "standard_reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7"
+  }
+}

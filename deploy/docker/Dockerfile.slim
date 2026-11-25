@@ -1,0 +1,73 @@
+# ============================================================
+# metric-code 后端容器化构建（简化版 — 跳过 Maven 编译）
+#   - 假设 backend/target/metric-code.jar 已经在本地编译好
+#   - 只构建运行时镜像，避免下载 Maven 基础镜像
+#
+# 用法:
+#   mvn -f backend/pom.xml clean package -DskipTests    # 先编译 jar
+#   docker build -f deploy/docker/Dockerfile.slim -t metric-backend:latest .
+# ============================================================
+
+ARG JRE_IMAGE=docker.1ms.run/library/eclipse-temurin:17-jre
+
+FROM ${JRE_IMAGE}
+
+# 时区与系统依赖
+RUN ( [ -f /etc/apt/sources.list ] && \
+        sed -i 's@archive.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g; s@security.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g' /etc/apt/sources.list ; \
+      [ -f /etc/apt/sources.list.d/ubuntu.sources ] && \
+        sed -i 's@archive.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g; s@security.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g' /etc/apt/sources.list.d/ubuntu.sources ; \
+      true ) && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 python3-pip python3-venv \
+        tzdata curl ca-certificates \
+        gcc g++ libffi-dev libssl-dev && \
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    rm -rf /var/lib/apt/lists/*
+
+# Python 虚拟环境 + 重型全家桶
+ENV VENV_DIR=/opt/venv
+RUN python3 -m venv $VENV_DIR
+ENV PATH="$VENV_DIR/bin:$PATH"
+
+RUN pip install --no-cache-dir --upgrade pip \
+        -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install --no-cache-dir \
+        -i https://pypi.tuna.tsinghua.edu.cn/simple \
+        numpy pandas scipy openpyxl python-dateutil pytz pymysql \
+        requests matplotlib beautifulsoup4 lxml
+
+WORKDIR /app
+
+# 预创建目录
+RUN mkdir -p \
+        /app/files/ability \
+        /app/files/alarm \
+        /app/files/issue_attachments \
+        /app/files/logos \
+        /app/files/metric_backups \
+        /app/files/raw_data \
+        /app/files/scripts \
+        /app/files/test_folder \
+        /app/logs
+
+# 直接拷贝本地已编译好的 jar
+COPY backend/target/metric-code.jar /app/app.jar
+
+# 拷贝 appuser-agent 监控探针（默认安装到 /opt/appuser-agent）
+#   - 启动时通过 -javaagent 注入到 JVM，采集运行时性能与异常
+#   - 实例元数据目录 agentInfo/<name> 由 docker-compose 单独挂载卷以保留运行时数据
+COPY deploy/appuser-agent /opt/appuser-agent
+RUN mkdir -p /opt/appuser-agent/agentInfo && \
+    chmod -R a+rX /opt/appuser-agent
+
+VOLUME ["/app/files", "/app/logs", "/opt/appuser-agent/agentInfo"]
+
+EXPOSE 18080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl -fsS http://localhost:18080/api/session/config > /dev/null || exit 1
+
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]

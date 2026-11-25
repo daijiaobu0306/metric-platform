@@ -1,0 +1,101 @@
+{
+  "categoryCode": "metric_g2",
+  "datasets": {
+    "查询类业务-页面加载时长": [
+      {
+        "metricCode": "INNER_QUERY_PAGE_LOAD",
+        "field": "平均时长(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称"
+      }
+    ],
+    "查询类业务-查询时长": [
+      {
+        "metricCode": "INNER_QUERY_DURATION",
+        "field": "平均时长(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称"
+      }
+    ],
+    "业务全程办理时长": [
+      {
+        "metricCode": "INNER_CRM_FULL_DURATION",
+        "field": "全程办理时长(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "businessContains": "chbn",
+        "businessMatches": false
+      },
+      {
+        "metricCode": "INNER_CHBN_FULL_DURATION",
+        "field": "全程办理时长(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "businessContains": "chbn",
+        "businessMatches": true
+      }
+    ],
+    "办理类-单业务-步骤间隔耗时、各步骤响应耗时": [
+      {
+        "metricCode": "INNER_CRM_PAGE_LOAD",
+        "field": "步骤响应耗时(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "stepType": "页面加载"
+      },
+      {
+        "metricCode": "INNER_CRM_STEP_RESPONSE",
+        "field": "步骤响应耗时(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "stepType": "步骤时长"
+      },
+      {
+        "metricCode": "INNER_CRM_STEP_INTERVAL",
+        "field": "操作间隔时长(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "stepType": "步骤时长"
+      }
+    ],
+    "办理类-单业务-按钮数（步骤数）": [
+      {
+        "metricCode": "INNER_CRM_BUTTON_COUNT",
+        "field": "办理按钮总数(步骤数)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称"
+      }
+    ],
+    "办理类-融合业务-步骤间隔耗时、各步骤响应耗时": [
+      {
+        "metricCode": "INNER_CHBN_PAGE_LOAD",
+        "field": "步骤响应耗时(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "stepType": "页面加载"
+      },
+      {
+        "metricCode": "INNER_CHBN_STEP_RESPONSE",
+        "field": "步骤响应耗时(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "stepType": "步骤时长"
+      },
+      {
+        "metricCode": "INNER_CHBN_STEP_INTERVAL",
+        "field": "操作间隔时长(秒)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称",
+        "stepType": "步骤时长"
+      }
+    ],
+    "办理类-融合业务（CHBN）-按钮数（步骤数）": [
+      {
+        "metricCode": "INNER_CHBN_BUTTON_COUNT",
+        "field": "办理按钮总数(步骤数)",
+        "operation": "count_distinct_gt",
+        "distinct": "业务名称"
+      }
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "sourceFile": "example-metrics.xlsx",
+  "sheet": "示例指标表",
+  "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "protocol": "satisfaction-final-v1",
+  "metrics": [
+    {
+      "code": "DEMO_M001",
+      "sourceRow": 2,
+      "groupName": "示例分组一",
+      "name": "示例指标 A",
+      "sourceScope": "示例分组一（来源=示例）",
+      "definition": "用于演示结构的示例指标，说明该字段填写指标的业务定义。",
+      "statisticalRule": "统计时间区间内的全量记录数，剔除无效记录。",
+      "frequency": "日、月",
+      "thresholdNote": "示例：工作日高于 300 件预警，月累计管控在 6000。",
+      "officialCode": "",
+      "unit": "个"
+    },
+    {
+      "code": "DEMO_M002",
+      "sourceRow": 3,
+      "groupName": "示例分组一",
+      "name": "示例指标 B",
+      "sourceScope": "示例分组一（来源=示例）",
+      "definition": "按时限完成处理的数量占总量的比例。",
+      "statisticalRule": "时限内处理量 ÷ 累计量（剔除无效样本）。",
+      "frequency": "日",
+      "thresholdNote": "示例：小于等于 85%。",
+      "officialCode": "",
+      "unit": "%"
+    },
+    {
+      "code": "DEMO_M003",
+      "sourceRow": 4,
+      "groupName": "示例分组二",
+      "name": "示例指标 C",
+      "sourceScope": "示例分组二（来源=示例）",
+      "definition": "单次处理耗时的平均值。",
+      "statisticalRule": "所有有效样本耗时之和 ÷ 样本数。",
+      "frequency": "日",
+      "thresholdNote": "",
+      "officialCode": "",
+      "unit": "秒"
+    }
+  ]
+}

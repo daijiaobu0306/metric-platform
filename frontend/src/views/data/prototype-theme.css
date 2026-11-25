@@ -1,0 +1,77 @@
+.data-prototype.data-container { padding:0; background:var(--ui-page); }
+.data-prototype .data-shell { padding:20px 24px 24px; }
+.data-prototype .data-category-navigation { margin-bottom:16px; padding:10px 16px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); }
+.data-prototype .data-category-navigation > .el-tabs__content { margin-top:10px; }
+.data-prototype .data-scan-status { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+.data-prototype.data-container .content-area { display:flex; flex-direction:column; gap:12px; margin:0; min-width:0; }
+.data-prototype.data-container .data-area { width:100%; min-width:0; }
+.data-prototype .filter-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 16px; margin:0 0 12px; border:1px solid var(--ui-border); border-radius:10px; background:var(--ui-surface); }
+.data-prototype .filter-row .el-input, .data-prototype .filter-row .el-select { max-width:240px; }.data-prototype .filter-row .el-date-editor { max-width:320px; }
+.data-prototype .attr-sidebar { width:100%; flex:none; box-sizing:border-box; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); }
+.data-prototype .attr-sidebar .attr-list { display:flex; align-items:flex-start; flex-wrap:wrap; gap:12px; max-height:220px; overflow:auto; }
+.data-prototype .attr-sidebar .attr-group { min-width:170px; padding:8px 12px; border:1px solid var(--ui-border-soft); border-radius:9px; background:var(--ui-page); }
+.data-prototype .scan-health-detail { line-height:1.8; }.data-prototype .scan-health-item { padding:12px; border:1px solid var(--ui-danger-border); border-radius:10px; background:var(--ui-surface); margin-top:10px; }.data-prototype .scan-health-path code { overflow-wrap:anywhere; font-size:11px; }.data-prototype .scan-health-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.data-prototype .config-toolbar { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+.data-prototype .el-table { border:0; }
+@media(max-width:768px) { .data-prototype .data-shell { padding:16px; }.data-prototype .filter-row { padding:12px; } }
+.data-prototype .ledger-category-tabs > .el-tabs__header { margin:0 0 16px; padding:8px 12px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); }
+.data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__nav { display:flex; gap:8px; }
+.data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__item { height:36px; padding:0 14px; border:1px solid transparent; border-radius:9px; color:var(--ui-muted); font-size:12px; }
+.data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__item.is-active { background:var(--ui-primary-soft); border-color:var(--ui-primary-border); color:var(--ui-primary-strong); font-weight:600; }
+.data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__nav-wrap::after, .data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__active-bar { display:none; }
+.data-prototype .subcategory-tabs { padding:12px 16px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); }
+.data-prototype .subcategory-tabs .el-tabs__item { height:30px; font-size:12px; }
+
+.data-prototype .data-subcategory-label { display:inline-flex; align-items:center; gap:7px; }
+.data-prototype .data-subcategory-label i { width:6px; height:6px; border-radius:50%; background:var(--ui-subtle); }
+.data-prototype .el-tabs__item.is-active .data-subcategory-label i { background:var(--ui-primary); }
+.data-prototype .subcategory-tabs .el-tabs__active-bar { display:none; }
+.data-prototype .subcategory-tabs .el-tabs__nav-wrap::after { display:none; }
+.data-prototype .subcategory-tabs .el-tabs__item { margin-right:8px; padding:0 14px; border:1px solid var(--ui-border); border-radius:18px; }
+.data-prototype .subcategory-tabs .el-tabs__item.is-active { background:var(--ui-primary-soft); border-color:var(--ui-primary-border); }
+/* Element Plus 会清零首个/末个 tab 的左右内边距，药丸标签下文字会贴边框；恢复对称内边距。 */
+.data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__item:nth-child(2),
+.data-prototype .ledger-category-tabs > .el-tabs__header .el-tabs__item:last-child { padding-left:14px; padding-right:14px; }
+.data-prototype .subcategory-tabs .el-tabs__header .el-tabs__item:nth-child(2),
+.data-prototype .subcategory-tabs .el-tabs__header .el-tabs__item:last-child { padding-left:14px; padding-right:14px; }
+.data-prototype .data-meta { display:flex; align-items:center; flex-wrap:wrap; gap:8px 16px; padding:9px 12px; border:1px solid var(--ui-primary-border); border-radius:8px; background:var(--ui-primary-soft); color:var(--ui-primary-strong); font-size:11px; }
+
+.data-prototype .subcategory-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+.data-prototype .subcategory-nav button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  max-width: 100%;
+  padding: 4px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 18px;
+  background: var(--ui-surface);
+  color: var(--el-text-color-primary);
+  font: inherit;
+  font-size: 12px;
+  text-align: start;
+  cursor: pointer;
+}
+.data-prototype .subcategory-nav button[aria-pressed="true"] {
+  border-color: var(--ui-primary-border);
+  background: var(--ui-primary-soft);
+  color: var(--ui-primary);
+}
+.data-prototype .subcategory-nav button[aria-pressed="true"] i { background: var(--ui-primary); }
+.data-prototype .subcategory-nav i { flex-shrink: 0; }
+.data-prototype .subcategory-nav button:focus-visible { outline: 2px solid var(--ui-primary); outline-offset: 2px; }
+.data-prototype .metric-options {
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border-soft);
+  border-radius: 9px;
+  background: var(--ui-page);
+}

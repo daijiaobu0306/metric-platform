@@ -1,0 +1,24 @@
+/* 问题页的结构布局；基础色和控件遵守公共主题。 */
+.issue-shell { border:0; background:transparent; box-shadow:none; }
+.issue-shell > :deep(.el-card__body) { padding:0; display:flex; flex-direction:column; gap:20px; }
+.issue-shell > :deep(.el-card__header) { border:0; padding:0 0 20px; background:transparent; }
+.card-header { gap:12px; }
+.card-header > span { font-size:14px; font-weight:600; color:var(--ui-heading); }
+.header-actions { gap:8px; flex-wrap:wrap; }
+.trend-area { height:100%; padding:20px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); box-sizing:border-box; }
+.trend-header { flex-wrap:wrap; gap:12px; }
+.trend-chart { height:180px; }
+.trend-chart-wrapper { min-height:180px; }
+.trend-filters { flex-wrap:wrap; }
+.table-toolbar { margin:0; padding:14px 16px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); flex-wrap:wrap; gap:10px; }
+.toolbar-left { flex-wrap:wrap; gap:8px; }
+.desktop-table { border:1px solid var(--ui-border); border-radius:12px; overflow:hidden; background:var(--ui-surface); }
+.issue-page :deep(.el-table__cell .cell) { padding-left:12px; padding-right:12px; }
+.issue-page :deep(.el-table) { border:0; }
+.form-section { border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); padding:16px; margin-bottom:16px; }
+.section-bar { background:var(--ui-primary); border-radius:3px; }
+.section-divider { background:var(--ui-border-soft); }
+@media(max-width:768px) { .header-actions { width:100%; } }
+.issue-page .issue-shell { border:0; background:transparent; box-shadow:none; }
+
+/* 顶部统计、趋势与发现者看板由 WorkspaceOverviewLayout 统一布局。 */

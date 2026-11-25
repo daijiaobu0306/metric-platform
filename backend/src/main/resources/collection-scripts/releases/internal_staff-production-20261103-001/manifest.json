@@ -1,0 +1,16 @@
+{
+  "protocolVersion": 1,
+  "version": "internal_staff-production-20261103-001",
+  "entry": "reader.py",
+  "categoryCode": "metric_g2",
+  "displayName": "对内部人员生产CSV采集",
+  "files": {
+    "config.json": "da5452f0dcc010f6a32f09fd2da7ff191d07f5e1d1a01b3f69b308f29e0026e5",
+    "reader.py": "b1cacf4a827e8eb084037adfe19bba69cf0b79d2d0ccd2f173728c5232689eeb",
+    "requirements-source.txt": "583476c5416c54185d7368b5313eb9aac0985e20ab6c44131e878851b9ded1e1",
+    "requirements.txt": "8f3e729326d13d63ace23fa36b1f18f1851f995d50e3cde5578e131965dfc0ae",
+    "source_export.py": "fd0b7e8aba527d973b669adc90bfdd6fb69dfab708062b2118e2ec4db7a37648",
+    "sources.json": "ef14910a7836931e1d5166fa899013b157bfafefde2f28ffb5e411af4a60480f",
+    "standard_reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7"
+  }
+}

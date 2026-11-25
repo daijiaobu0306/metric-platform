@@ -1,0 +1,17 @@
+/* 查询栏显式启用；按钮保持内容宽度，其余空间由条件控件均衡分配。 */
+.balanced-query-row { display:flex !important; flex-wrap:wrap !important; align-items:center !important; justify-content:flex-start !important; gap:10px !important; }
+.balanced-query-row > .filter-actions, .balanced-query-row > .query-actions { display:flex; align-items:center; gap:8px; white-space:nowrap; }
+.balanced-query-row .filter-actions > .el-button, .balanced-query-row .query-actions > .el-button { margin:0 !important; width:auto !important; flex:none !important; min-width:0 !important; height:34px; padding:0 12px; }
+.balanced-query-row > .el-button { height:34px; }
+.balanced-query-row > .el-input .el-input__wrapper, .balanced-query-row > .el-select .el-select__wrapper { min-height:34px; box-sizing:border-box; }
+.balanced-query-row > .el-date-editor { min-height:34px; box-sizing:border-box; }
+.balanced-query-row > .el-form-item { margin-bottom:0; }
+.balanced-query-row > .el-form-item .el-input, .balanced-query-row > .el-form-item .el-select, .balanced-query-row > .el-form-item .el-date-editor { width:100% !important; }
+.balanced-query-row > .el-form-item .el-form-item__content { min-width:0; }
+
+.balanced-query-row > .query-field { display:grid; grid-template-columns:max-content minmax(0,1fr); align-items:center; gap:8px; }
+.balanced-query-row > .query-field > .el-input, .balanced-query-row > .query-field > .el-select { width:100% !important; min-width:0; }
+.balanced-query-row > .query-field > .el-date-editor { width:100%; min-width:0; box-sizing:border-box; }
+.balanced-query-row > .query-field > .filter-label { margin:0; white-space:nowrap; }
+.balanced-query-row > .query-actions .el-form-item__content { display:flex; flex-wrap:nowrap; align-items:center; gap:8px; }
+.balanced-query-row > .query-actions .el-button { margin:0 !important; width:auto !important; flex:none !important; }

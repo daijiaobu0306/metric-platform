@@ -1,0 +1,6 @@
+{
+  "sourceCode": "compliance",
+  "categoryCode": "metric_g1",
+  "displayName": "合规管理脚本采集",
+  "config": {}
+}

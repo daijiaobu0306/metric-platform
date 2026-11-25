@@ -1,0 +1,15 @@
+.audit-container { padding:0; }
+.audit-shell { min-width:0; }
+.audit-tabs :deep(.el-tab-pane) { display:flex; flex-direction:column; gap:20px; }
+.desktop-table { border:1px solid var(--ui-border); border-radius:12px; overflow:hidden; background:var(--ui-surface); }
+.login-log-trend-area { position:relative; background:var(--ui-surface); border:1px solid var(--ui-border); border-radius:12px; padding:20px; }
+.login-log-trend-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+.login-log-trend-title { font-size:14px; color:var(--ui-heading); font-weight:600; }
+.login-log-trend-chart { height:210px; }
+.login-log-trend-area .trend-chart-wrapper { position:relative; }
+.audit-container :deep(.el-table) { border:0; }
+.audit-container :deep(.el-table .el-button) { font-size:12px; }
+.audit-container :deep(.el-table .el-tag--success) { background:var(--ui-success-soft); color:var(--ui-success); }
+.audit-container :deep(.el-table .el-tag--danger) { background:var(--ui-danger-soft); color:var(--ui-danger); }
+.mobile-cards .audit-card { margin-bottom:12px; }
+@media(max-width:768px) { .login-log-trend-chart { height:180px; } }

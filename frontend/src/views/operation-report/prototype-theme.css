@@ -1,0 +1,9 @@
+.report-prototype.report-container { padding:0; background:var(--ui-page); }
+.report-prototype.report-container .content-area { display:block; margin:0; }
+.report-prototype.report-container .data-area { width:100%; min-width:0; border:1px solid var(--ui-border); border-radius:14px; background:var(--ui-surface); overflow:hidden; }
+.report-prototype.report-container .data-area > .subcategory-workspace { padding:16px; }
+.report-prototype.report-container .data-area > .desktop-table { border:0; border-radius:0; }
+.report-prototype .report-realtime-toolbar { border-radius:14px 14px 0 0; }
+.report-prototype .coming-soon { min-height:320px; border:1px dashed var(--ui-border); border-radius:14px; background:var(--ui-surface); }.report-prototype .coming-soon-text { color:var(--ui-subtle); font-size:18px; }
+.report-prototype .clickable-tag { cursor:pointer; }
+.report-prototype .report-type-tabs > .el-tabs__content { overflow:visible; }

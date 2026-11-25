@@ -1,0 +1,189 @@
+/* ============================================================================
+ * metric-utilities.css
+ * ----------------------------------------------------------------------------
+ * 与原型 "rounded-2xl / shadow-xs / 渐变卡 / 12px 正文 / font-mono 数字"
+ * 对应的手写等价物。
+ *
+ * 设计原则：
+ *   - 不引 Tailwind（部署内网，无 CDN）
+ *   - 颜色 / 圆角 / 阴影 / 字号 一律 var(--metric-*) 引用 metric-tokens.css
+ *   - 只放原型里出现频率 ≥ 5 次的工具类；专属于某个组件的样式放组件 .vue 里
+ *
+ * 命名：
+ *   - .metric-*  前缀，避免和 Element Plus / 业务 utility 冲突
+ * ============================================================================ */
+
+/* === 卡片 === */
+.metric-card {
+  background: #fff;
+  border: 1px solid var(--metric-border);
+  border-radius: var(--metric-radius-lg);
+  box-shadow: var(--metric-shadow-xs);
+  transition: box-shadow .15s ease;
+}
+.metric-card:hover {
+  box-shadow: var(--metric-shadow-md);
+}
+.metric-card-inner {
+  background: #fff;
+  border: 1px solid var(--metric-border);
+  border-radius: var(--metric-radius);
+  box-shadow: var(--metric-shadow-xs);
+}
+
+/* === 渐变卡（按 accent） === */
+.metric-gradient-primary {
+  background: linear-gradient(135deg,
+    var(--metric-primary-soft) 0%, #eff6ff 100%);
+  border-color: var(--metric-primary-border);
+}
+.metric-gradient-danger {
+  background: linear-gradient(135deg,
+    var(--metric-danger-soft) 0%, var(--metric-warning-soft) 100%);
+  border-color: #fecdd3;
+}
+.metric-gradient-warning {
+  background: linear-gradient(135deg,
+    var(--metric-warning-soft) 0%, #fef9c3 100%);
+  border-color: #fde68a;
+}
+.metric-gradient-success {
+  background: linear-gradient(135deg,
+    var(--metric-success-soft) 0%, #ecfeff 100%);
+  border-color: #a7f3d0;
+}
+
+/* === 左侧 1.5×3.5 竖条（KPI 卡专属） === */
+.metric-bar {
+  display: inline-block;
+  width: 6px;  /* 1.5 * 4px ≈ 6px，与原型比例近似 */
+  height: 14px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.metric-bar-primary { background: var(--metric-primary); }
+.metric-bar-danger  { background: var(--metric-danger); }
+.metric-bar-warning { background: var(--metric-warning); }
+.metric-bar-success { background: var(--metric-success); }
+.metric-bar-special { background: var(--metric-special); }
+
+/* === 胶囊（status pill） === */
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--metric-radius-pill);
+  font-size: var(--metric-text-2xs);
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.metric-pill-primary { background: var(--metric-primary-soft); color: var(--metric-primary-hover); }
+.metric-pill-success { background: var(--metric-success-soft); color: #047857; }
+.metric-pill-warning { background: var(--metric-warning-soft); color: #b45309; }
+.metric-pill-danger  { background: var(--metric-danger-soft);  color: #be123c; }
+.metric-pill-special { background: var(--metric-special-soft); color: #6d28d9; }
+.metric-pill-neutral { background: #f1f5f9; color: var(--metric-text-secondary); }
+
+/* === 状态圆点 === */
+.metric-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.metric-dot-primary { background: var(--metric-primary); box-shadow: 0 0 0 3px var(--metric-primary-soft); }
+.metric-dot-success { background: var(--metric-success); box-shadow: 0 0 0 3px var(--metric-success-soft); }
+.metric-dot-warning { background: var(--metric-warning); box-shadow: 0 0 0 3px var(--metric-warning-soft); }
+.metric-dot-danger  { background: var(--metric-danger);  box-shadow: 0 0 0 3px var(--metric-danger-soft); }
+.metric-dot-pulse   { animation: metric-pulse 1.6s ease-in-out infinite; }
+@keyframes metric-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .35; }
+}
+
+/* === 数字（font-mono + 等宽数字 + 粗体） === */
+.metric-num {
+  font-family: var(--metric-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.01em;
+}
+.metric-num-2xl { font-size: var(--metric-text-2xl); font-weight: 800; }
+.metric-num-3xl { font-size: var(--metric-text-3xl); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+.metric-num-xl  { font-size: var(--metric-text-xl);  font-weight: 700; }
+
+/* === 字号工具 === */
+.metric-text-2xs { font-size: var(--metric-text-2xs); }
+.metric-text-xs  { font-size: var(--metric-text-xs);  }
+.metric-text-sm  { font-size: var(--metric-text-sm);  }
+.metric-text-md  { font-size: var(--metric-text-md);  }
+.metric-text-lg  { font-size: var(--metric-text-lg);  }
+.metric-text-xl  { font-size: var(--metric-text-xl);  }
+.metric-text-2xl { font-size: var(--metric-text-2xl); }
+.metric-text-3xl { font-size: var(--metric-text-3xl); }
+
+.metric-text        { color: var(--metric-text); }
+.metric-text-2nd    { color: var(--metric-text-secondary); }
+.metric-text-muted  { color: var(--metric-text-muted); }
+
+/* === 按钮（幽灵态，与原型靠齐） === */
+.metric-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--metric-border);
+  border-radius: var(--metric-radius);
+  background: #fff;
+  color: var(--metric-text);
+  font-size: var(--metric-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.metric-btn:hover {
+  background: var(--metric-surface-soft);
+  border-color: var(--metric-border-strong);
+}
+.metric-btn-primary {
+  background: var(--metric-primary);
+  border-color: var(--metric-primary);
+  color: #fff;
+}
+.metric-btn-primary:hover {
+  background: var(--metric-primary-hover);
+  border-color: var(--metric-primary-hover);
+  color: #fff;
+}
+
+/* === 滚动条（6px 圆角拇指，原型规格） === */
+.metric-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.metric-scroll::-webkit-scrollbar-track { background: transparent; }
+.metric-scroll::-webkit-scrollbar-thumb {
+  background: var(--metric-border-strong);
+  border-radius: 3px;
+}
+.metric-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--metric-text-muted);
+}
+
+/* === 画布 === */
+.metric-canvas {
+  background: var(--metric-canvas);
+  min-height: 100%;
+}
+
+/* === 网格行（用于 grid 表格，不依赖 <table>） === */
+.metric-grid-row {
+  display: grid;
+  align-items: center;
+  border-bottom: 1px solid var(--metric-border);
+  font-size: var(--metric-text-xs);
+}
+.metric-grid-row:hover {
+  background: var(--metric-surface-soft);
+}

@@ -1,0 +1,55 @@
+/* 原型视觉仅作用于指标体系配置页面。 */
+.metric-page { background:var(--ui-page); color:var(--ui-text); margin:-15px; min-height:calc(100% + 30px); font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+.metric-workspace { padding:24px; display:flex; flex-direction:column; gap:20px; }
+.stat-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; width:100%; }
+.stat-entry { display:inline-flex; align-items:center; gap:5px; padding:5px 7px; background:var(--ui-primary-soft); color:var(--ui-primary-strong); font-size:11px; border-radius:6px; white-space:nowrap; }
+.stat-unit { font-size:12px; font-weight:400; color:var(--ui-subtle); }
+.metric-actions { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.header-buttons { display:flex; gap:8px; flex-wrap:wrap; }
+.metric-page :deep(.el-button) { font-size:12px; font-weight:500; border-radius:8px; gap:5px; }
+.metric-actions :deep(.el-button) { height:34px; padding:0 13px; margin:0; }
+.metric-actions :deep(.el-button--primary) { box-shadow:0 1px 2px var(--ui-primary-border); }
+.metric-actions :deep(.el-button--danger.is-plain) { --el-button-bg-color:var(--ui-danger-soft); --el-button-border-color:var(--ui-danger-border); --el-button-text-color:var(--ui-danger); }
+.audit-sync-button { color:var(--ui-primary-strong); }
+.table-toolbar { margin:0; gap:10px; }
+.table-toolbar .selected-count { font-size:12px; color:var(--ui-primary-strong); }
+.metric-list-panel { min-width:0; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-surface); box-shadow:0 1px 2px #0f172a05; overflow:hidden; }
+.metric-page :deep(.el-table) { --el-table-header-bg-color:var(--ui-page); --el-table-header-text-color:var(--ui-muted); --el-table-text-color:var(--ui-text); --el-table-border-color:var(--ui-border-soft); --el-table-row-hover-bg-color:var(--ui-primary-soft); font-size:12px; }
+.metric-page :deep(.el-table th.el-table__cell) { padding:13px 0; font-weight:600; }
+.metric-page :deep(.el-table td.el-table__cell) { padding:12px 0; }
+.metric-page :deep(.metric-config-table .cell) { padding-left:12px; padding-right:12px; }
+.metric-page :deep(.metric-code-cell .editable-cell-text) { display:inline-block; padding:2px 7px; color:var(--ui-primary-strong); background:#f1f5f9; border-radius:5px; font-family:Consolas,monospace; }
+/* 指标编码只读展示：与原来可编辑态同一套视觉，但不带指针光标和悬停反馈 */
+.metric-page :deep(.metric-code-cell .metric-code-text) { display:inline-block; padding:2px 7px; color:var(--ui-primary-strong); background:#f1f5f9; border-radius:5px; font-family:Consolas,monospace; cursor:default; user-select:text; }
+.metric-page :deep(.metric-name-cell .editable-cell-text) { color:var(--ui-heading); font-weight:600; }
+.metric-page :deep(.metric-config-table .el-link) { font-size:12px; }
+/* 弹窗内容保持 main 的表单与复用组件。 */
+:deep(.metric-config-dialog) { --el-color-primary:var(--ui-primary); --el-border-color:var(--ui-border); --el-border-radius-base:8px; border-radius:16px; padding:0; overflow:hidden; max-width:calc(100vw - 24px); box-shadow:0 24px 60px #0f172a26; }
+:deep(.metric-config-dialog .el-dialog__header) { padding:20px 24px; margin:0; border-bottom:1px solid var(--ui-border); }
+:deep(.metric-config-dialog .el-dialog__title) { font-size:17px; font-weight:700; color:var(--ui-heading); }
+:deep(.metric-config-dialog .el-dialog__headerbtn) { top:10px; right:10px; }
+:deep(.metric-config-dialog .el-dialog__body) { padding:20px 24px; color:var(--ui-text); }
+:deep(.metric-config-dialog .el-dialog__footer) { padding:14px 24px; border-top:1px solid var(--ui-border); background:var(--ui-page); }
+:deep(.metric-config-dialog .el-tabs__item) { font-size:13px; }
+.dialog-info-bar { border:1px solid var(--ui-border); border-radius:8px; background:var(--ui-page); }
+.weight-config-section { border-radius:12px; background:var(--ui-page); }
+.weight-row { padding:10px 12px; border-bottom:1px solid var(--ui-border); }
+.weight-value { color:var(--ui-primary-strong); font-variant-numeric:tabular-nums; }
+.metric-page :deep(.el-slider) { --el-slider-main-bg-color:#38bdf8; --el-slider-runway-bg-color:var(--ui-border); --el-slider-button-size:16px; --el-slider-height:6px; }
+@media (max-width:768px) {
+  .metric-page { margin:-10px; min-height:calc(100% + 20px); }
+  .metric-workspace { padding:16px; gap:16px; }
+  .stat-entry { font-size:10px; padding:4px; }
+  .stat-unit { font-size:11px; }
+  .header-buttons { width:auto; }
+  .header-buttons :deep(.el-button) { flex:none; }
+  .table-toolbar { align-items:stretch; }
+  .mobile-cards { padding:12px; }
+  .metric-card { border-radius:10px; box-shadow:none; }
+  :deep(.metric-config-dialog .el-dialog__body) { padding:16px; }
+}
+.metric-page :deep(.metric-category-link) { display:inline-flex; align-items:center; width:fit-content; max-width:100%; padding:2px 7px; border:1px solid var(--ui-primary-border); border-radius:5px; background:var(--ui-primary-soft); color:var(--ui-primary-strong); font-size:11px; }
+.metric-page :deep(.metric-category-link:hover) { border-color:var(--ui-primary); }
+.metric-page :deep(.metric-config-table .editable-cell-text:hover) { background:var(--ui-primary-soft); }
+.metric-page :deep(.unit-chip) { border:1px solid var(--ui-border-soft); border-radius:6px; }
+.metric-page :deep(.unit-chip-missing) { background:var(--ui-danger-soft); color:var(--ui-danger); }

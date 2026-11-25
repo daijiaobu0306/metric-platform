@@ -1,0 +1,14 @@
+{
+  "protocolVersion": 1,
+  "version": "compliance-20261113-002",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "40dc9b35e50b7ae72a8c26d812e5f2c3d3904ecce93e53c4f063de0a05385a72",
+    "profile.json": "d279bda076a9b8ae506a0dca8d2d9d401340af7a0e123ecde56d5302cc711cca",
+    "reader.py": "4acd7af4ff7cbdfcd4cf0a0b7c21fc14c32ed293747cd9428f1228958cd5f723",
+    "requirements-xlsx.txt": "290af5eae2f37443bbcce5e012d8833e4e91c1863fc754cefdbafdef9005dcf0",
+    "requirements.txt": "335e37e97c9e72b331e30e8919a17cae4754ef34420de137815fc1da86ed788d"
+  },
+  "categoryCode": "metric_g1",
+  "displayName": "合规管理脚本采集"
+}

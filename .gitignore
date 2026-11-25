@@ -1,0 +1,132 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+target/
+# 前端构建临时目录（esbuild 需要可写 TEMP，指向项目内时使用）
+.tmpbuild/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local config
+.env
+.env.local
+.env.*.local
+deploy/windows/env.local.bat
+
+# Data imports (test data)
+data_import/
+
+# Python venv
+venv/
+
+# Uploads
+uploads/
+
+# Local data files
+alarm.txt
+data/archive/
+
+# Misc
+*.class
+*.jar
+*.war
+*.ear
+# appuser-agent 监控探针包内 jar 例外（必须随仓库分发，否则 Docker 构建拿不到 agent jar）
+!deploy/appuser-agent/**/*.jar
+# 移动端 H5 接入文档目录内的签名 SDK 例外（对接方按此 jar 联调，需随文档一起保留）
+!doc/移动端H5页面文档/*.jar
+
+# Docker 构建产物（镜像 tar 包不入库）
+deploy/*.tar.gz
+deploy/*.tar
+# Local transfer archives; source inputs belong in their module resource directories.
+deploy/*-transfer-*.zip
+# 前端构建产物部署目录(由 frontend/dist/ 复制而来,不入库)
+deploy/frontend/
+deploy/frontend-only-*.tar.gz
+# 前端静态资源打包目录(由前端构建脚本产出,不入库)
+deploy/metric-frontend-static-*/
+deploy/metric-frontend-static-*.tar.gz.md5
+# 数据库本地备份文件(运维手动备份产物,不入库)
+deploy/db-backup-*.sql
+# 非容器化部署包产物与暂存目录（由 deploy/scripts/build-standalone.sh 生成）
+deploy/out/
+deploy/build/
+deploy/pkgcheck/
+deploy/db-backup-*.sql.gz
+# Versioned database snapshots contain local business data and credentials/session rows.
+deploy/db_export/V[0-9]*/
+# dev 环境本地宿主机持久化目录
+files-dev/
+logs-dev/
+
+# 本地前端原型参考站（Vue+TS+Vite 项目，本地 UX 参考用，不入库）
+前端原型参考/
+# 本地 Claude skills 工作区（agent 上下文/参考材料，不入库）
+# 仅忽略仓库根目录，避免误伤 frontend/src/skills/ 等子目录
+/skills/
+
+# 运行时产生的数据/日志(本地开发)
+files/metric_backups/
+files/ability/
+files/alarm/
+files/issue_attachments/
+files/logos/
+files/raw_data/
+files/scripts/
+files/collection-scripts/
+files/collection-worker/
+files/collection-maintenance/
+files/test_folder/
+nohup*.out
+
+# Local operations and generated dependencies
+deploy/config/.env
+deploy/config/.env.local
+deploy/config/.env.staging
+.env.staging
+deploy/python/
+
+# Local AI constitution / cross-tool memory (per-machine, never committed)
+LOCAL_AGENTS.md
+项目全貌.md
+
+# AI 工具工作区（本机记忆/日志/交接文档，可能含凭据，不入库）
+.workbuddy/
+
+# 本地运维/数据脚本与导出的数据包（与平台代码无关，不入库）
+deploy/scripts/acceptance-data/
+deploy/scripts/acceptance-data-*.zip
+deploy/scripts/db-migration/
+deploy/scripts/yp-strategy-audit/
+deploy/config/.env.local.bak.*
+
+# 本机临时中间产物（排查/导入导出用的临时文件，不入库）
+_tmp/
+
+# Python 检查脚本和测试缓存
+__pycache__/
+*.pyc
+
+# 打包中间产物（esbuild 临时目录）
+.build-tmp/
+
+# 数据库备份与发布产物（不入库）
+deploy/db_export/
+deploy/out/
+
+# 真实环境配置
+.env.production.real

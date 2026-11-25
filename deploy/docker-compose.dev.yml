@@ -1,0 +1,78 @@
+# 仓库内执行请用 bash scripts/compose.sh，或显式指定 --project-directory 为仓库根目录。
+# ============================================================
+# 本地开发用 docker-compose 配置
+#
+# 设计原则:跟生产保持一致 —— MySQL 用宿主机的(不容器化)
+#   - backend:Java + Python 全家桶容器
+#   - nginx:前端静态文件 + API 反向代理(模拟生产 nginx 部署)
+#   - MySQL:用宿主机本机 MySQL(通过 host.docker.internal:3306)
+#
+# 前置:
+#   - 本机 MySQL 必须在 3306 上监听 TCP(默认就是)
+#   - 前端先构建: cd frontend && npm run build
+#
+# 用法:
+#   docker compose --project-directory . -f deploy/docker-compose.dev.yml up -d --build
+#   浏览器开 http://localhost:28080/metric-code/
+# ============================================================
+
+services:
+  backend:
+    image: metric-code:latest
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile
+    container_name: metric-backend-dev
+    restart: unless-stopped
+    ports:
+      - "18080:18080"
+    environment:
+      # 智云共享签名密钥由部署环境提供，不写入仓库
+      STARAGENT_COMMON_AUTH_SECRET: ${STARAGENT_COMMON_AUTH_SECRET:-}
+      # 通过 host.docker.internal 访问宿主机 MySQL
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/system_operations_metrics?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: CHANGE_ME
+      UPLOAD_BASE_PATH: /app/files
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Xms1g -Xmx4g"
+      # P2/V42: dev DB 与 Alarm 实体有历史 schema 漂移（access_count 等 15 列），
+      # 在 dev 容器里关掉 Hibernate validate 以便 V42+ Spring Security 验证。
+      # 生产环境保持 application.yml 的 ddl-auto: validate 不变。
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_FLYWAY_VALIDATE_ON_MIGRATE: "false"
+      # SSO 调试 — 本地 IdP 在 http://localhost:7200/usermanager
+      #   client_id/secret 从 Usermanager 服务管理后台获取（仅 dev 用）
+      #   URL 默认值就是 localhost:7200，可不设
+      SSO_OIDC_CLIENT_ID: metric-code
+      SSO_OIDC_SCOPE: ""
+      SSO_FRONTEND_BASE_URL: http://localhost:28080
+      #   URL 默认值就是 localhost:7200，可不设
+      SSO_OIDC_CLIENT_SECRET: "metric-code"
+      # SSO_AUTH_URI 由浏览器调用（用户在 host 浏览器访问），保留 localhost:7200
+      SSO_AUTH_URI: http://localhost:7200/usermanager/oauth/authorize
+      # SSO_TOKEN_URI / USERINFO_URI / JWKS_URI 由后端容器内调用。
+      # 默认指向本机 mock UM（localhost:7200），与 SSO_AUTH_URI 一致。
+      # 容器内 localhost 是容器自己，如用 OrbStack 的 host.docker.internal 会 502；
+      # 此时改用宿主机的 LAN IP（本机 en0 当前 192.168.1.200）。
+      # 注意：换机器 / 换网络时要改这里。
+      SSO_TOKEN_URI: http://localhost:7200/usermanager/oauth/token
+      SSO_JWKS_URI: http://localhost:7200/usermanager/.well-known/jwks.json
+      SSO_USERINFO_URI: http://localhost:7200/usermanager/user/me
+
+  nginx:
+    image: docker.1ms.run/library/nginx:alpine
+    container_name: metric-nginx-dev
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "28080:28080"
+    volumes:
+      # 前端静态文件 (需先 cd frontend && npm run build)
+      # 挂到 metric-code 子目录,匹配前端 vite.config 的 base: '/metric-code/'
+      - ./frontend/dist:/usr/share/nginx/html/metric-code:ro
+      # nginx 配置
+      - ./deploy/nginx/metric-code-dev.conf:/etc/nginx/conf.d/default.conf:ro
+      # 日志(本机可查)
+      - ./logs-dev/nginx:/var/log/nginx

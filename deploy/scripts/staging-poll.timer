@@ -1,0 +1,12 @@
+[Unit]
+Description=每分钟轮询 origin/main，HEAD 不一致则部署
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=60s
+AccuracySec=5s
+Persistent=true
+Unit=staging-poll.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,159 @@
+{
+  "categoryCode": "satisfaction",
+  "listName": "满意度指标清单",
+  "delimiter": "€€",
+  "expectedFields": 114,
+  "fileNamePattern": "^MetricData(\\d{8})",
+  "missingValues": [
+    "",
+    "—",
+    "–",
+    "-",
+    "N/A",
+    "NA",
+    "null",
+    "NULL"
+  ],
+  "percentSuffix": "%",
+  "maxScale": 4,
+  "maxAbsValue": "99999999999.9999",
+  "provenance": "counterparty_delivery",
+  "metrics": [
+    {
+      "index": 0,
+      "code": "SAT_FINAL_R003",
+      "name": "工单累计量",
+      "unit": "个",
+      "listRow": 2,
+      "scope": "投诉类型“在线客服”—工单累计量"
+    },
+    {
+      "index": 3,
+      "code": "SAT_FINAL_R004",
+      "name": "及时率",
+      "unit": "%",
+      "listRow": 5,
+      "scope": "投诉类型“在线客服”—及时率"
+    },
+    {
+      "index": 10,
+      "code": "SAT_FINAL_R005",
+      "name": "96小时超时量",
+      "unit": "个",
+      "listRow": 12,
+      "scope": "投诉类型“在线客服”—96小时超时量"
+    },
+    {
+      "index": 20,
+      "code": "SAT_FINAL_R006",
+      "name": "一次解决率",
+      "unit": "%",
+      "listRow": 22,
+      "scope": "投诉类型“在线客服”—一次解决率"
+    },
+    {
+      "index": 24,
+      "code": "SAT_FINAL_R007",
+      "name": "满意率",
+      "unit": "%",
+      "listRow": 26,
+      "scope": "投诉类型“在线客服”—满意率"
+    },
+    {
+      "index": 26,
+      "code": "SAT_FINAL_R008",
+      "name": "重投率",
+      "unit": "%",
+      "listRow": 28,
+      "scope": "投诉类型“在线客服”—重投率"
+    },
+    {
+      "index": 27,
+      "code": "SAT_FINAL_R009",
+      "name": "工单累计量",
+      "unit": "个",
+      "listRow": 29,
+      "scope": "投诉类型“倒三角-服务咨询”—工单累计量"
+    },
+    {
+      "index": 30,
+      "code": "SAT_FINAL_R010",
+      "name": "及时率",
+      "unit": "%",
+      "listRow": 32,
+      "scope": "投诉类型“倒三角-服务咨询”—及时率"
+    },
+    {
+      "index": 51,
+      "code": "SAT_FINAL_R011",
+      "name": "满意率",
+      "unit": "%",
+      "listRow": 53,
+      "scope": "投诉类型“倒三角-服务咨询”—满意率"
+    },
+    {
+      "index": 53,
+      "code": "SAT_FINAL_R012",
+      "name": "重投率",
+      "unit": "%",
+      "listRow": 55,
+      "scope": "投诉类型“倒三角-服务咨询”—重投率"
+    },
+    {
+      "index": 72,
+      "code": "SAT_FINAL_R013",
+      "name": "回退率",
+      "unit": "%",
+      "listRow": 74,
+      "scope": "投诉类型“倒三角-绿通(不含个人未完工)”—回退率"
+    },
+    {
+      "index": 74,
+      "code": "SAT_FINAL_R014",
+      "name": "一次解决率",
+      "unit": "%",
+      "listRow": 76,
+      "scope": "投诉类型“倒三角-绿通(不含个人未完工)”—一次解决率"
+    },
+    {
+      "index": 109,
+      "code": "SAT_FINAL_R015",
+      "name": "工单累计量",
+      "unit": "个",
+      "listRow": 111,
+      "scope": "投诉类型“综调”—工单累计量"
+    },
+    {
+      "index": 110,
+      "code": "SAT_FINAL_R016",
+      "name": "及时率",
+      "unit": "%",
+      "listRow": 112,
+      "scope": "投诉类型“综调”—及时率"
+    },
+    {
+      "index": 111,
+      "code": "SAT_FINAL_R017",
+      "name": "满意率",
+      "unit": "%",
+      "listRow": 113,
+      "scope": "投诉类型“综调”—满意率"
+    },
+    {
+      "index": 112,
+      "code": "SAT_FINAL_R018",
+      "name": "回退率",
+      "unit": "%",
+      "listRow": 114,
+      "scope": "投诉类型“综调”—回退率"
+    },
+    {
+      "index": 113,
+      "code": "SAT_FINAL_R019",
+      "name": "一次解决率",
+      "unit": "%",
+      "listRow": 115,
+      "scope": "投诉类型“综调”—一次解决率"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+-- V43: 补 alarm.access_count 列
+--
+-- 背景：Alarm 实体声明了 accessCount 字段（@Column(name="access_count")），
+--       但 V1 建表时漏了，其它表（metric_system_run_detail / inner_*）由
+--       V9 / V11 正确加上。导致 Hibernate ddl-auto: validate 在重启时失败。
+--
+-- 本迁移在生产 / dev 库均需要。开发库 dev_db 已通过 mysql 客户端手工 ALTER 加过，
+--  本文件用通用 SQL 兼容老版本 MySQL（不依赖 ADD COLUMN IF NOT EXISTS）。
+--  注意：Hibernate ddl-auto: validate 会在启动时检查列存在；如果 alarm.access_count
+--  已经在开发库手工补过，本迁移会失败 —— 此时需要手动 insert flyway_schema_history
+--  (version=43, description='fix alarm missing access count', type='SQL', success=1)
+--  跳过本次迁移（参考项目其它 .sql 出现过的既有人工调整做法）。
+ALTER TABLE alarm ADD COLUMN access_count BIGINT COMMENT '访问量';

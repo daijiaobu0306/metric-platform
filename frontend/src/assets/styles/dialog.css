@@ -1,0 +1,8 @@
+/* 统一样式 */
+.el-dialog {
+  margin-top: 3vh !important;
+}
+
+.el-dialog__body {
+  overflow: auto;
+}

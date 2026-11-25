@@ -1,0 +1,39 @@
+# ============================================================
+# webhook-deploy systemd 服务文件
+# 安装到云服务器：cp /opt/metric-staging/deploy/systemd/webhook-deploy.service /etc/systemd/system/
+#                  systemctl daemon-reload
+#                  systemctl enable --now webhook-deploy
+#                  systemctl status webhook-deploy
+# 查看日志：journalctl -u webhook-deploy -f
+#            或 tail -f /opt/metric-staging/logs/webhook.log
+# ============================================================
+
+[Unit]
+Description=Metric Code staging webhook receiver + auto-deploy
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+# 用 root 跑（要 docker compose + git pull + npm build）
+User=root
+WorkingDirectory=/opt/metric-staging
+EnvironmentFile=/opt/metric-staging/.env.staging
+ExecStart=/usr/bin/env node /opt/metric-staging/deploy/scripts/webhook-deploy.mjs
+Restart=always
+RestartSec=10
+StandardOutput=append:/opt/metric-staging/logs/webhook-stdout.log
+StandardError=append:/opt/metric-staging/logs/webhook-stderr.log
+
+# 安全加固（够用即可，不要过度限制导致 deploy 失败）
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+# 必须能写 deploy 目录（git pull + npm build）
+ReadWritePaths=/opt/metric-staging /var/run/docker.sock
+# 允许 docker 子进程
+SupplementaryGroups=docker
+
+[Install]
+WantedBy=multi-user.target

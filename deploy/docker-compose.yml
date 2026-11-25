@@ -1,0 +1,53 @@
+# 仓库内执行请用 bash scripts/compose.sh，或显式指定 --project-directory 为仓库根目录。
+# ============================================================
+# 生产/通用 docker-compose 配置
+#   - 后端 Spring Boot 容器，连外部 MySQL（宿主机或独立服务器）
+#   - 所有环境差异通过 .env 文件配置，本文件无需修改
+#   - 部署:
+#       cp .env.example .env  # 按实际环境填写
+#       docker compose up -d
+# ============================================================
+
+services:
+  backend:
+    image: metric-code:${VERSION:-latest}
+    container_name: metric-backend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-18080}:18080"
+    environment:
+      # 智云共享签名密钥由部署环境提供，不写入仓库
+      STARAGENT_COMMON_AUTH_SECRET: ${STARAGENT_COMMON_AUTH_SECRET:-}
+      # 数据库连接（指向宿主机或外部 MySQL）
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      # 容器内文件根目录（固定 /app/files，宿主机路径由 volumes 映射）
+      UPLOAD_BASE_PATH: /app/files
+      METRIC_DATABASE_AUTO_UPGRADE: "true"
+      METRIC_DATABASE_EXPECTED_NAME: ${DB_NAME:-system_operations_metrics}
+      # 时区
+      TZ: Asia/Shanghai
+      # appuser-agent 监控探针配置
+      #   - APPUSER_AGENT_HOME：镜像内 agent 安装根目录（Dockerfile 已 COPY 到 /opt/appuser-agent）
+      #   - APPUSER_AGENT_NAME：当前应用实例名，会拼接到 instance.home 路径末尾
+      APPUSER_AGENT_HOME: ${APPUSER_AGENT_HOME:-/opt/appuser-agent}
+      APPUSER_AGENT_NAME: ${APPUSER_AGENT_NAME:-mop}
+      # JVM 参数（生产可调）；末尾追加 appuser-agent 三个 JVM 参数
+      #   注意：-javaagent 必须出现在 -jar 之前，当前 ENTRYPOINT 通过 sh -c 展开后满足要求
+      JAVA_OPTS: "${JAVA_OPTS:--Xms512m -Xmx2g -XX:+UseG1GC} -javaagent:${APPUSER_AGENT_HOME:-/opt/appuser-agent}/lib/appuser-agent.jar -Dappuser.agent.name=${APPUSER_AGENT_NAME:-mop} -Dappuser.was.instance.home=${APPUSER_AGENT_HOME:-/opt/appuser-agent}/agentInfo/${APPUSER_AGENT_NAME:-mop}"
+    volumes:
+      # 宿主机路径完全由 .env 配置（生产示例: /home/appuser/metric-code2/files）
+      - ${HOST_FILES_PATH:-./files}:/app/files
+      - ${HOST_LOGS_PATH:-./logs}:/app/logs
+      # agentInfo 目录挂载到宿主机，重启容器后保留 agent 运行数据；宿主目录不存在会自动创建
+      - ${HOST_APPUSER_AGENT_PATH:-./appuser-agent-runtime}/agentInfo:/opt/appuser-agent/agentInfo
+    extra_hosts:
+      # 让容器内可以通过 host.docker.internal 访问宿主机服务（如 MySQL）
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:18080/api/session/config"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15m
+      retries: 3

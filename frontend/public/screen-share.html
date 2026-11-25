@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>专屏</title>
+    <style>
+      body{margin:0;background:#f4f7fb;color:#293b50;font:14px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+      main{padding:22px;min-height:100vh;box-sizing:border-box}.head{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
+      .head h1{margin:0;font-size:22px}.muted,small{color:#7b8998}.cards{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:12px}
+      .card,.panel{background:#fff;border:1px solid #e4edf6;border-radius:12px}.card{padding:14px;display:grid;gap:6px}.card b{font-size:24px}
+      .panel{padding:18px;margin-top:16px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+      .metric{padding:10px;border:1px solid #e2ebf4;border-left:4px solid #54a876;border-radius:9px;background:#fff;display:grid;gap:6px}.metric.warn{border-left-color:#d49627}.metric.bad{border-left-color:#d75f5f}.metric b{font-size:18px}
+      .error{max-width:460px;margin:18vh auto;text-align:center;background:#fff;padding:30px;border-radius:12px}@media(max-width:800px){main{padding:12px}.head{align-items:flex-start;flex-direction:column}.cards{grid-template-columns:repeat(2,1fr)}}
+    </style>
+  </head>
+  <body>
+    <main id="app"><p class="muted">正在加载专屏…</p></main>
+    <script src="./screen-share.js?v=20261112"></script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+/* 公共主题契约：当前只提供清爽蓝白。未来主题覆盖这些变量即可，无需改业务组件。 */
+:root {
+  --ui-primary: #0284c7;
+  --ui-primary-strong: #0369a1;
+  --ui-primary-soft: #f0f9ff;
+  --ui-primary-border: #bae6fd;
+  --ui-page: #f8fafc;
+  --ui-surface: #ffffff;
+  --ui-field: #f8fafc;
+  --ui-border: #e2e8f0;
+  --ui-border-soft: #edf2f7;
+  --ui-heading: #0f172a;
+  --ui-text: #334155;
+  --ui-muted: #64748b;
+  --ui-subtle: #94a3b8;
+  --ui-on-primary: #ffffff;
+  --ui-success: #047857;
+  --ui-success-soft: #ecfdf5;
+  --ui-success-border: #a7f3d0;
+  --ui-warning: #d97706;
+  --ui-warning-soft: #fffbeb;
+  --ui-danger: #e11d48;
+  --ui-danger-soft: #fff1f2;
+  --ui-danger-border: #fecdd3;
+  --ui-indigo: #4338ca;
+  --ui-indigo-soft: #eef2ff;
+  --ui-violet: #6d28d9;
+  --ui-violet-soft: #f5f3ff;
+  --ui-radius-lg: 12px;
+  --ui-shadow-sm: 0 1px 3px #0f172a05;
+  --ui-shadow-hover: 0 4px 12px #0f172a08;
+}
+.workspace-theme {
+  --el-color-primary: var(--ui-primary);
+  --el-color-primary-light-3: color-mix(in srgb, var(--ui-primary) 70%, var(--ui-surface));
+  --el-color-primary-light-5: color-mix(in srgb, var(--ui-primary) 50%, var(--ui-surface));
+  --el-color-primary-dark-2: var(--ui-primary-strong);
+  --el-color-primary-light-9: var(--ui-primary-soft);
+  --el-color-primary-light-8: var(--ui-primary-soft);
+  --el-color-primary-light-7: var(--ui-primary-border);
+  --el-border-color: var(--ui-border);
+  --el-border-color-light: var(--ui-border-soft);
+  --el-text-color-primary: var(--ui-heading);
+  --el-text-color-regular: var(--ui-text);
+  --el-text-color-secondary: var(--ui-muted);
+  --el-bg-color: var(--ui-surface);
+  --el-fill-color-blank: var(--ui-surface);
+  --el-bg-color-overlay: var(--ui-surface);
+  --el-border-radius-base: 8px;
+  color: var(--ui-text);
+}
+.workspace-theme .el-table {
+  --el-table-header-bg-color: var(--ui-page);
+  --el-table-header-text-color: var(--ui-muted);
+  --el-table-text-color: var(--ui-text);
+  --el-table-bg-color: var(--ui-surface);
+  --el-table-tr-bg-color: var(--ui-surface);
+  --el-table-border-color: var(--ui-border-soft);
+  --el-table-row-hover-bg-color: var(--ui-primary-soft);
+  font-size: 12px;
+}
+.workspace-theme .el-table th.el-table__cell { background:var(--ui-page); padding:13px 0; font-weight:600; }
+.workspace-theme .el-table td.el-table__cell { padding:12px 0; }
+.workspace-theme .el-button { border-radius:8px; font-size:12px; }
+.workspace-theme .el-tag { border-radius:6px; font-size:11px; }
+/* 弹窗自带 class，append-to-body 之后仍可使用公共主题。 */
+.workspace-theme.el-dialog { padding:0; max-width:calc(100vw - 24px); border-radius:16px; overflow:hidden; background:var(--ui-surface); box-shadow:0 24px 60px #0f172a26; }
+.workspace-theme.el-dialog .el-dialog__header { padding:20px 24px; margin:0; border-bottom:1px solid var(--ui-border); }
+.workspace-theme.el-dialog .el-dialog__body { padding:20px 24px; }
+.workspace-theme.el-dialog .el-dialog__footer { padding:14px 24px; background:var(--ui-page); border-top:1px solid var(--ui-border); }
+.workspace-theme.el-dialog .el-dialog__title { color:var(--ui-heading); font-size:17px; font-weight:700; }
+.workspace-theme.el-dialog .el-dialog__headerbtn { top:10px; right:10px; }
+/* 共享页签：告警、工单等工作区共用。 */
+.workspace-tabs > .el-tabs__header { margin:0 0 20px; }
+.workspace-tabs > .el-tabs__header .el-tabs__nav-wrap::after { height:1px; background:var(--ui-border); }
+.workspace-tabs > .el-tabs__header .el-tabs__nav { display:flex; gap:8px; padding:4px 0 10px; }
+.workspace-tabs > .el-tabs__header .el-tabs__active-bar { display:none; }
+.workspace-tabs > .el-tabs__header .el-tabs__item { height:36px; padding:0 16px; border:1px solid transparent; border-radius:8px; color:var(--ui-muted); font-size:13px; font-weight:500; }
+.workspace-tabs > .el-tabs__header .el-tabs__item.is-active { border-color:var(--ui-border); background:var(--ui-surface); color:var(--ui-primary-strong); box-shadow:var(--ui-shadow-sm); font-weight:600; }
+/* 药丸标签对齐（全局）：Element Plus 会把首个 tab 的 padding-left、末个 tab 的 padding-right 清零
+   （为让下划线式标签贴齐内容边缘），药丸样式下就变成「首个文字贴左边框、末个文字贴右边框」。
+   这里对药丸标签恢复对称内边距，保证图标+文字在药丸内居中。 */
+.workspace-tabs > .el-tabs__header .el-tabs__item:nth-child(2),
+.workspace-tabs > .el-tabs__header .el-tabs__item:last-child { padding-left:16px; padding-right:16px; }
+/* 标签组整体保持靠左排列（中后台常规布局），只修标签内部文字居中，不做整组居中。 */
+
+.quick-filter-feedback { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:12px 16px; background:var(--ui-primary-soft); border-bottom:1px solid var(--ui-primary-border); color:var(--ui-primary-strong); font-size:12px; }
+.gongdan-table-panel, .alarm-table-panel { scroll-margin-top:12px; }
+/* 细节共用层：聚焦、时间数字、滚动条和按钮图标遵守同一主题。 */
+.workspace-theme .el-button > span { display:inline-flex; align-items:center; gap:5px; }
+.workspace-theme .el-button:focus-visible, .workspace-theme .el-link:focus-visible { outline:2px solid var(--ui-primary); outline-offset:3px; }
+.workspace-theme .el-table .workspace-time-cell .cell { font-family:Consolas,monospace; font-variant-numeric:tabular-nums; font-size:11px; color:var(--ui-muted); }
+.workspace-theme .el-table .el-table__fixed-right-patch { background:var(--ui-page); }
+.workspace-theme .el-checkbox__inner { border-radius:4px; }
+.workspace-theme .el-dialog__body, .workspace-theme .el-scrollbar__wrap, .workspace-theme .el-table__body-wrapper { scrollbar-width:thin; scrollbar-color:var(--ui-border) transparent; }
+.workspace-theme .el-empty__description p { color:var(--ui-subtle); font-size:12px; }
+.workspace-theme.el-dialog .el-dialog__close { color:var(--ui-subtle); transition:color .15s; }
+.workspace-theme.el-dialog .el-dialog__headerbtn:hover .el-dialog__close { color:var(--ui-primary); }
+@media(prefers-reduced-motion:reduce) { .workspace-theme.el-dialog .el-dialog__close { transition:none; } }
+
+/* 原型细节共用层：目录、数值、浮层及分页。仅作用于迁移后的工作区。 */
+.workspace-time-value { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; }
+.workspace-time-value .el-icon { color:var(--ui-subtle); font-size:12px; }
+.workspace-category-chip { display:inline-block; padding:2px 7px; border-radius:5px; background:var(--ui-page); color:var(--ui-text); font-size:11px; line-height:1.6; }
+.workspace-metric-value { color:var(--ui-primary-strong); font-weight:600; font-variant-numeric:tabular-nums; }
+.workspace-metric-value.missing { color:var(--ui-subtle); font-weight:400; }
+.workspace-theme .el-pagination { --el-pagination-button-bg-color:var(--ui-surface); --el-pagination-hover-color:var(--ui-primary); font-variant-numeric:tabular-nums; }
+.workspace-theme .el-pagination .btn-prev, .workspace-theme .el-pagination .btn-next { border:1px solid var(--ui-border); border-radius:7px; }
+.workspace-theme .el-pagination .el-pager li { min-width:28px; margin:0 3px; border:1px solid var(--ui-border); border-radius:7px; font-size:12px; }
+.workspace-theme .el-pagination .el-pager li.is-active { background:var(--ui-primary); border-color:var(--ui-primary); color:var(--ui-on-primary); }
+.workspace-theme .el-tabs__item:hover { color:var(--ui-primary-strong); }
+.workspace-theme .el-tabs__item:focus-visible { outline:2px solid var(--ui-primary); outline-offset:-2px; }
+.workspace-theme .el-table .el-table__inner-wrapper::before { background:var(--ui-border-soft); }
+.workspace-theme .el-table .el-table-fixed-column--right, .workspace-theme .el-table .el-table-fixed-column--left { background:var(--ui-surface); }
+.workspace-theme .el-input__wrapper, .workspace-theme .el-select__wrapper { transition:box-shadow .15s,background .15s; }
+.workspace-theme.workspace-popover { padding:14px; border:1px solid var(--ui-border); border-radius:12px; color:var(--ui-text); background:var(--ui-surface); box-shadow:var(--ui-shadow-hover); }
+.workspace-theme.workspace-popover .el-popper__arrow::before { background:var(--ui-surface); border-color:var(--ui-border); }
+.workspace-theme.workspace-popover .el-checkbox { color:var(--ui-text); }
+.workspace-theme .selected-count { padding:3px 8px; border-radius:6px; color:var(--ui-primary-strong); background:var(--ui-primary-soft); font-size:11px; }
+.workspace-theme [role="button"]:focus-visible { outline:2px solid var(--ui-primary); outline-offset:3px; }
+@media(prefers-reduced-motion:reduce) { .workspace-theme .el-input__wrapper, .workspace-theme .el-select__wrapper { transition:none; } }
+
+.observation-custom-time .custom-time-heading { margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--ui-border-soft); color:var(--ui-heading); font-weight:600; }
+.observation-custom-time .custom-time-hint { margin:14px 0; color:var(--ui-subtle); font-size:12px; }.observation-custom-time .custom-time-actions { display:flex; justify-content:flex-end; gap:10px; padding-top:14px; border-top:1px solid var(--ui-border-soft); }

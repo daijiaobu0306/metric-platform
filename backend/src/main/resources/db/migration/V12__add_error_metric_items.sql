@@ -1,0 +1,11 @@
+-- 系统异常指标配置
+INSERT INTO metric_item (category_id, sub_category_name, sub_category_code, metric_code, metric_name, metric_type, metric_definition, unit, data_source, calc_rule_type, calc_source_table, calc_field, calc_extra, collect_frequency, status, alarm_threshold, alarm_threshold_type, gongdan_threshold, gongdan_threshold_type, create_time, update_time)
+VALUES
+(10, '系统异常', 'error', 'error_interface_failure_count', '单个接口的失败次数', '系统运行', '失败次数大于阈值的接口数量', '个', 'error', 'count_gt', 'metric_error_interface', 'failure_count', NULL, '定期采集', 1, 1, '>', 3, '>', NOW(), NOW()),
+(10, '系统异常', 'error', 'error_interface_success_rate', '单个接口的成功率', '系统运行', '成功率小于阈值的接口数量', '个', 'error', 'count_lt', 'metric_error_interface', 'success_rate', NULL, '定期采集', 1, 1, '<', 3, '<', NOW(), NOW()),
+(10, '系统异常', 'error', 'error_interface_overall_rate', '接口的整体成功率', '系统运行', '(总访问量-总失败量)/总访问量*100%', '%', 'error', 'fixed_calc', 'metric_error_interface', NULL, 'formula: (sum_access-sum_failure)/sum_access*100', '定期采集', 1, 99, '<', 95, '<', NOW(), NOW()),
+(10, '系统异常', 'error', 'error_instance_count', '实例异常次数', '系统运行', '异常次数大于阈值的应用-异常名称组合数量', '次', 'error', 'count_gt', 'metric_error_instance', 'error_count', NULL, '定期采集', 1, 1, '>', 3, '>', NOW(), NOW()),
+(10, '系统异常', 'error', 'error_js_type_count', 'JS异常类型数', '系统运行', 'JS报错类型去重数量', '种', 'error', 'distinct_count', 'metric_error_js', 'error_name', NULL, '定期采集', 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
+(10, '系统异常', 'error', 'error_js_single_count', '单个JS异常的次数', '系统运行', '报错次数大于阈值的JS异常数量', '次', 'error', 'count_gt', 'metric_error_js', 'error_count', NULL, '定期采集', 1, 1, '>', 3, '>', NOW(), NOW()),
+(10, '系统异常', 'error', 'error_biz_return_count', '业务自定义返回异常', '系统运行', '返回信息匹配关键词的记录数', '条', 'error', 'keyword_match', 'metric_error_biz_return', 'return_info', 'keywords_table: metric_error_keywords', '定期采集', 1, 1, '>', 3, '>', NOW(), NOW()),
+(10, '系统异常', 'error', 'error_return_code_count', '业务自定义返回码的个数', '系统运行', '返回码去重数量', '个', 'error', 'distinct_count', 'metric_error_return_code', 'return_code', NULL, '定期采集', 1, NULL, NULL, NULL, NULL, NOW(), NOW());

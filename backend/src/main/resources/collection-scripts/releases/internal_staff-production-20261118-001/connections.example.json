@@ -1,0 +1,28 @@
+{
+  "databases": {
+    "adb": {
+      "driver_class": "com.bes.analyticdb.jdbc.AnalyticDBDriver",
+      "jar_path": "/home/appuser/adb-export/driver/analyticdb-jdbc-all-3.0.6-b81ba09b0c8485aa8bf91b3629b0dcb3.jar",
+      "url": "jdbc:analyticdb://192.168.1.11:3650/appuser",
+      "user": "REPLACE_ON_SERVER",
+      "password": "REPLACE_ON_SERVER"
+    },
+    "mysql": {
+      "driver_class": "com.mysql.cj.jdbc.Driver",
+      "jar_path": "/home/appuser/adb-export/driver/mysql-connector-java-8.0.33.jar",
+      "url": "jdbc:mysql://192.168.1.10:3306/appuser",
+      "user": "REPLACE_ON_SERVER",
+      "password": "REPLACE_ON_SERVER"
+    }
+  },
+  "bpm": {
+    "token_url": "http://192.168.1.10:8084/usermanager/oauth/token",
+    "api_url": "http://192.168.1.10:8084/appuser-bpm/api/business/multi/statistics/list",
+    "origin": "http://192.168.1.10:8084",
+    "referer": "http://192.168.1.10:8084/wg-bpm/",
+    "client_id": "AMDB",
+    "client_secret": "REPLACE_ON_SERVER",
+    "username": "REPLACE_ON_SERVER",
+    "password": "REPLACE_ON_SERVER"
+  }
+}

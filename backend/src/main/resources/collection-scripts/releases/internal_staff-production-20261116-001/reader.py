@@ -1,0 +1,147 @@
+"""Configured production CSV calculations migrated from the legacy Java collectors."""
+import argparse
+import csv
+from datetime import datetime
+from decimal import Decimal, ROUND_HALF_UP
+import json
+from pathlib import Path
+import re
+import sys
+from standard_reader import read_rows
+
+
+def number(value):
+    if value is None or str(value).strip() == '':
+        return None
+    # Java exporters used ms/s suffixes. Keep signs and decimals; reject malformed input.
+    value = re.sub(r'(?:ms|s|秒|%)$', '', str(value).strip()).strip()
+    result = Decimal(value)
+    if not result.is_finite():
+        raise ValueError('Non-finite source value')
+    return result
+
+
+def select(rows, rule):
+    result = []
+    for row in rows:
+        business = row.get('业务名称', '')
+        if 'businessContains' in rule and (rule['businessContains'] in business.lower()) != rule['businessMatches']:
+            continue
+        if 'stepType' in rule:
+            # Explicit configuration replaces the former implicit step-type dispatch.
+            step = row.get('步骤类型')
+            if not step:
+                name = row.get('步骤名称', row.get('业务步骤', ''))
+                step = '页面加载' if '页面' in name else '步骤时长'
+            if step != rule['stepType']:
+                continue
+        result.append(row)
+    return result
+
+
+def calculate(rows, rule, parameters):
+    op, field = rule['operation'], rule['field']
+    if op == 'distinct_count':
+        return Decimal(len({r[field] for r in rows if r[field] != ''})), None
+    if op == 'keyword_match':
+        words = parameters.get('keywords') or []
+        if isinstance(words, str):
+            words = json.loads(words)
+        if not words:
+            return None, '未配置关键词'
+        return Decimal(sum(any(word in r[field] for word in words) for r in rows)), None
+    if op in ('count_gt', 'count_lt', 'count_distinct_gt'):
+        threshold = number(rule.get('constant', parameters.get('baseline')))
+        if threshold is None:
+            return None, '未配置计算基准'
+        matching = [r for r in rows if number(r[field]) is not None and
+                    (number(r[field]) < threshold if op == 'count_lt' else number(r[field]) > threshold)]
+        return Decimal(len({r[rule['distinct']] for r in matching}) if op == 'count_distinct_gt' else len(matching)), None
+    values = [number(r[field]) for r in rows]
+    values = [v for v in values if v is not None]
+    if op == 'single':
+        if len(rows) > 1:
+            raise ValueError('Direct metric requires a single source row: '+rule['metricCode'])
+        return values[0] if values else None, None
+    if op == 'sum':
+        return sum(values, Decimal(0)) if values else None, None
+    if op == 'avg':
+        return (sum(values)/len(values)).quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP) if values else None, None
+    if op == 'success_ratio':
+        access = [number(r[rule['accessField']]) for r in rows]
+        if any(v is None for v in access) or len(values) != len(rows):
+            return None, '访问量或失败量缺失'
+        total = sum(access, Decimal(0))
+        return ((total-sum(values))/total*100).quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP) if total else None, None
+    raise ValueError('Unsupported configured operation: '+op)
+
+
+def production_rows(request, config):
+    if request['source']['worker']['categoryCode'] != config['categoryCode']:
+        raise ValueError('Category binding mismatch')
+    parameters = {r['metricCode']: r for r in request['source'].get('metricRules') or []}
+    with open(request['inputPath'], encoding='utf-8-sig', newline='') as stream:
+        reader = csv.DictReader(stream, strict=True)
+        headers = reader.fieldnames or []
+        if 'dataset' not in headers:
+            # Keep all existing standard CSV metrics in the same category task.
+            return read_rows(request['inputPath'], request['source'], {'categoryCode': config['categoryCode']})
+        if len(headers) != len(set(headers)) or not {'dataset', 'data_time', '_empty'} <= set(headers):
+            raise ValueError('Invalid production CSV headers')
+        groups = {}
+        for line, row in enumerate(reader, 2):
+            if line > 50002 or None in row or any(v is None for v in row.values()):
+                raise ValueError('Invalid CSV row width or too many rows')
+            dataset, time = row['dataset'], row['data_time']
+            parsed = datetime.fromisoformat(time)
+            if parsed.tzinfo or parsed.microsecond:
+                raise ValueError('Source time must be Beijing local time to seconds')
+            if dataset not in config['datasets']:
+                raise ValueError('Unconfigured source dataset: '+dataset)
+            if row['_empty'] not in ('0', '1'):
+                raise ValueError('Invalid explicit empty marker')
+            groups.setdefault((dataset, time), []).append(row)
+    output = []
+    for (dataset, time), source_rows in groups.items():
+        empty = [r for r in source_rows if r['_empty'] == '1']
+        if empty and len(source_rows) != 1:
+            raise ValueError('Empty marker mixed with source rows')
+        rows = [] if empty else source_rows
+        for rule in config['datasets'][dataset]:
+            code = rule['metricCode']
+            if code not in parameters:
+                raise ValueError('Metric code missing/disabled in category: '+code)
+            if parameters[code].get('status', 1) != 1:
+                continue
+            for field in [rule['field']]+([rule['distinct']] if 'distinct' in rule else [])+([rule['accessField']] if 'accessField' in rule else []):
+                if field not in headers:
+                    raise ValueError('Missing column '+field+' for '+code)
+            selected = select(rows, rule)
+            value, missing = calculate(selected, rule, parameters[code])
+            output.append(dict(metric_code=code, metric_value=None if value is None else str(value),
+                               data_time=time, dataset=dataset, details=selected, source_details=rows, rule_status=missing or '已配置',
+                               calculation=rule, parameters=parameters[code],
+                               _source={'file': request['sourceFile'], 'dataset': dataset, 'sourceRows': len(rows)}))
+    if not output:
+        raise ValueError('No configured metric records')
+    return output
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--request', required=True)
+    parser.add_argument('--output', required=True)
+    args = parser.parse_args()
+    try:
+        request = json.loads(Path(args.request).read_text(encoding='utf-8'))
+        config = json.loads(Path(__file__).with_name('config.json').read_text(encoding='utf-8'))
+        records = production_rows(request, config)
+        Path(args.output).write_text(json.dumps(dict(protocolVersion=1, outputType='metric-values', rowCount=len(records), records=records), ensure_ascii=False, allow_nan=False), encoding='utf-8')
+    except Exception as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

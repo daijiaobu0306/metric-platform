@@ -1,0 +1,9 @@
+# Build/load the standard-library Worker image first. No package index access here.
+ARG WORKER_IMAGE=metric-collection-worker:stdlib
+FROM ${WORKER_IMAGE}
+COPY backend/collection-python/plugins/standard/requirements-xlsx.txt /opt/collection-worker/requirements-xlsx.txt
+COPY deploy/python/collection-worker-wheels/ /tmp/collection-worker-wheels/
+RUN pip install --no-index --no-cache-dir --only-binary=:all: \
+      --find-links=/tmp/collection-worker-wheels \
+      -r /opt/collection-worker/requirements-xlsx.txt \
+    && rm -rf /tmp/collection-worker-wheels

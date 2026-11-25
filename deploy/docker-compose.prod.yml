@@ -1,0 +1,85 @@
+# 仓库内执行请用 bash scripts/compose.sh，或显式指定 --project-directory 为仓库根目录。
+# ============================================================
+# metric-code 生产环境 docker-compose 配置
+#   - backend: Spring Boot + Python 容器（连外部 MySQL）
+#   - frontend: Nginx + 静态文件容器（反代 API 到 backend）
+#   - 两个镜像独立，可单独更新
+#
+# 部署:
+#   cp .env.production .env   # 按实际环境填写
+#   docker compose --project-directory . -f deploy/docker-compose.prod.yml up -d
+# ============================================================
+
+services:
+  backend:
+    image: metric-backend:${VERSION:-latest}
+    container_name: metric-backend
+    restart: unless-stopped
+    ports:
+      - "18080:18080"
+    environment:
+      # 智云共享签名密钥由部署环境提供，不写入仓库
+      STARAGENT_COMMON_AUTH_SECRET: ${STARAGENT_COMMON_AUTH_SECRET:-}
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_BASE_PATH: /app/files
+      METRIC_DATABASE_AUTO_UPGRADE: "true"
+      METRIC_DATABASE_EXPECTED_NAME: ${DB_NAME:-system_operations_metrics}
+      TZ: Asia/Shanghai
+
+      # ============================================================
+      # 统一认证客户端（启动期绑定，UI 不可修改；改完必须 docker compose restart backend）
+      # 生产值在 .env 里覆盖；下面是 application.yml 的占位默认。
+      # ============================================================
+      SSO_OIDC_CLIENT_ID: ${SSO_OIDC_CLIENT_ID:-placeholder-client-id}
+      SSO_OIDC_CLIENT_SECRET: ${SSO_OIDC_CLIENT_SECRET:-placeholder-client-secret}
+      SSO_OIDC_SCOPE: ${SSO_OIDC_SCOPE:-openid,profile}
+      SSO_AUTH_URI: ${SSO_AUTH_URI:-http://127.0.0.1:7200/usermanager/oauth/authorize}
+      SSO_TOKEN_URI: ${SSO_TOKEN_URI:-http://127.0.0.1:7200/usermanager/oauth/token}
+      SSO_JWKS_URI: ${SSO_JWKS_URI:-http://127.0.0.1:7200/usermanager/.well-known/jwks.json}
+      SSO_USERINFO_URI: ${SSO_USERINFO_URI:-http://127.0.0.1:7200/usermanager/usermanager/user/me}
+      SSO_FRONTEND_BASE_URL: ${SSO_FRONTEND_BASE_URL:-http://localhost:28080}
+      SSO_FRONTEND_CALLBACK_PATH: ${SSO_FRONTEND_CALLBACK_PATH:-/metric-code/sso/callback}
+      SSO_FRONTEND_LOGIN_PATH: ${SSO_FRONTEND_LOGIN_PATH:-/metric-code/login}
+      SSO_DEFAULT_TARGET: ${SSO_DEFAULT_TARGET:-/metric-code/}
+
+      # 可选：定时从 IdP 同步用户/角色（SSO_SYNC_ENABLED=true 才生效）
+      SSO_SYNC_ENABLED: ${SSO_SYNC_ENABLED:-false}
+      SSO_SYNC_DELAY_MS: ${SSO_SYNC_DELAY_MS:-3600000}
+      SSO_SYNC_API_BASE_URL: ${SSO_SYNC_API_BASE_URL:-}
+      SSO_SYNC_API_TOKEN: ${SSO_SYNC_API_TOKEN:-}
+
+      # appuser-agent 监控探针配置
+      #   - APPUSER_AGENT_HOME：镜像内 agent 安装根目录（Dockerfile 已 COPY 到 /opt/appuser-agent）
+      #   - APPUSER_AGENT_NAME：当前应用实例名，会拼接到 instance.home 路径末尾
+      APPUSER_AGENT_HOME: ${APPUSER_AGENT_HOME:-/opt/appuser-agent}
+      APPUSER_AGENT_NAME: ${APPUSER_AGENT_NAME:-mop}
+      # JAVA_OPTS：原值由 .env 提供，未设置时使用默认堆参数；末尾追加 appuser-agent 三个 JVM 参数
+      #   注意：-javaagent 必须出现在 -jar 之前，当前 ENTRYPOINT 通过 sh -c 展开后满足要求
+      JAVA_OPTS: "${JAVA_OPTS:--Xms512m -Xmx2g -XX:+UseG1GC} -javaagent:${APPUSER_AGENT_HOME:-/opt/appuser-agent}/lib/appuser-agent.jar -Dappuser.agent.name=${APPUSER_AGENT_NAME:-mop} -Dappuser.was.instance.home=${APPUSER_AGENT_HOME:-/opt/appuser-agent}/agentInfo/${APPUSER_AGENT_NAME:-mop}"
+    volumes:
+      - ${HOST_FILES_PATH:-./files}:/app/files
+      - ${HOST_LOGS_PATH:-./logs}:/app/logs
+      # agentInfo 目录挂载到宿主机，重启容器后保留运行时元数据；宿主目录不存在会自动创建
+      - ${HOST_APPUSER_AGENT_PATH:-./appuser-agent-runtime}/agentInfo:/opt/appuser-agent/agentInfo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:18080/api/session/config"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15m
+      retries: 3
+
+  frontend:
+    image: metric-frontend:${VERSION:-latest}
+    container_name: metric-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    volumes:
+      - ${HOST_LOGS_PATH:-./logs}/nginx:/var/log/nginx

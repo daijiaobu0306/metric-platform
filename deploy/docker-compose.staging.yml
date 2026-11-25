@@ -1,0 +1,100 @@
+# 仓库内执行请用 bash scripts/compose.sh，或显式指定 --project-directory 为仓库根目录。
+# ============================================================
+# 云 staging 环境 docker-compose
+#
+# 基于 docker-compose.dev.yml 改造，关键差异：
+#   - container_name 加 -staging 后缀（避免与本地 dev / 生产重名）
+#   - 后端端口 18081:18080（避开 dev 18080）
+#   - nginx 端口 28081:80（避开 dev 28080）
+#   - 镜像走 metric-backend:${VERSION} + metric-frontend:${VERSION} 双镜像（与生产对齐）
+#   - env_file 走 .env.staging（不在仓库里，含敏感信息）
+#   - 加 healthcheck（依赖 docker 自带）
+#
+# 前置：
+#   - 云服务器装好 docker + docker compose v2
+#   - /opt/metric-staging/ 目录已创建（见 deploy/scripts/setup-staging.sh）
+#   - .env.staging 已配置（参考 .env.staging.example）
+#   - MySQL 已起在 127.0.0.1:3306，库 system_operations_metrics_staging 已建
+#   - 镜像已 load：metric-backend:staging-latest + metric-frontend:staging-latest
+# ============================================================
+
+services:
+  backend:
+    image: metric-backend:${VERSION:-staging-latest}
+    container_name: metric-backend-staging
+    restart: unless-stopped
+    ports:
+      - "18081:18080"
+    # 容器 → host 通信：解析 host.docker.internal 到 host 网关
+    # 云 MySQL 在 host 3306 跑着，backend 容器要通过 host.docker.internal:3306 连
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # 与生产/dev 统一的 files bind mount（ScanHealthService 等依赖此路径）
+      - /opt/metric-staging/files:/app/files
+      # The platform file-root setting also uses this absolute path inside the container.
+      - /opt/metric-staging/files:/opt/metric-staging/files
+      - /opt/metric-staging/appuser-agent-runtime:/opt/appuser-agent/agentInfo
+    env_file:
+      - .env.staging
+    environment:
+      # 与 .env.staging 重复声明以便 compose ps 显示
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:?必须设置 SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      UPLOAD_BASE_PATH: /app/files
+      METRIC_DATABASE_AUTO_UPGRADE: "true"
+      METRIC_DATABASE_EXPECTED_NAME: system_operations_metrics_staging
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Xms1g -Xmx2g"
+      # staging 严格校验（防止 schema drift）
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_VALIDATE_ON_MIGRATE: "true"
+      # SSO 默认指向 staging UM（云服务器 7200 上已跑 usermanager）
+      SSO_USERMANAGER_URL: ${SSO_USERMANAGER_URL:-http://host.docker.internal:7200/usermanager}
+      SSO_USERMANAGER_BROWSER_URL: ${SSO_USERMANAGER_BROWSER_URL:-http://8.148.195.209:7200/usermanager}
+      # client-id / secret 必须与 application.yml 的占位变量名 SSO_OIDC_* 对齐，
+      # 否则 Spring 启动时读不到、落到默认值 placeholder-client-id，UserManager 会报
+      # {"error":"invalid_client","error_description":"客户端'placeholder-client-id'不存在"}。
+      SSO_OIDC_CLIENT_ID: ${SSO_OIDC_CLIENT_ID:-metric-code}
+      SSO_OIDC_CLIENT_SECRET: ${SSO_OIDC_CLIENT_SECRET:-}
+      SSO_OIDC_SCOPE: ""
+      SSO_FRONTEND_BASE_URL: ${SSO_FRONTEND_BASE_URL:-http://8.148.195.209:28081/metric-code}
+      SSO_JWT_SECRET: ${SSO_JWT_SECRET:?必须设置 SSO_JWT_SECRET（≥32字节）}
+      SSO_JWT_TTL_SECONDS: "28800"
+      SSO_DEFAULT_TARGET: "/metric-code/"
+    healthcheck:
+      # 用 /api/sso/login-url（200 + permitAll），/api/v1/oauth2/login-url 是旧 SSO 路径，401 误判 unhealthy
+      test: ["CMD-SHELL", "curl -fsS http://localhost:18080/api/sso/login-url >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      # 首次升级在入口执行备份/迁移；成功后才会启动 HTTP 服务。
+      start_period: 15m
+
+  nginx:
+    image: docker.1ms.run/library/nginx:alpine
+    container_name: metric-nginx-staging
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    # 容器→host 通信：解析 host.docker.internal 到 host 网关
+    # 用于把 /gitee-webhook 反代到 host 的 webhook-deploy:28082
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "28081:80"
+    volumes:
+      # 前端静态文件（每次 docker compose build 前重新 cp 进 /opt/metric-staging/frontend/dist）
+      - /opt/metric-staging/frontend/dist:/usr/share/nginx/html/metric-code:ro
+      # nginx staging 配置（listen 28081，proxy_pass backend-staging）
+      - ./deploy/nginx/metric-code-staging.conf:/etc/nginx/conf.d/default.conf:ro
+      # 日志（方便宿主查）
+      - /opt/metric-staging/logs/nginx:/var/log/nginx
+    healthcheck:
+      # 用 127.0.0.1 而不是 localhost（alpine nginx listen IPv4，localhost 走 ::1 会 Connection refused）
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/healthz || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

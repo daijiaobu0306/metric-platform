@@ -1,0 +1,18 @@
+{
+  "protocolVersion": 1,
+  "version": "internal_staff-production-20261116-003",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "d3d60efd1a719abd171d512a7932e19d5f521b9d5ab240ddb762af465b79d5d2",
+    "connections.example.json": "14dbc06484fde219ee9d99726cfe1ddf8b54151cbbcd095ebb1f5b091a5ea64b",
+    "profile.json": "ff134fb7c8faf256dcd09b5f501ce3ea7c7e82ed5b5e00cbc70888dbbf1e5f23",
+    "reader.py": "d7a3a8b13af270c8e77a599ad39909dffbc50454c3a5dfe5e85614c7e6ae4ba3",
+    "requirements-source.txt": "583476c5416c54185d7368b5313eb9aac0985e20ab6c44131e878851b9ded1e1",
+    "requirements.txt": "8f3e729326d13d63ace23fa36b1f18f1851f995d50e3cde5578e131965dfc0ae",
+    "source_export.py": "679424d905ba96935cd90d6e8c9d278a5fd20343219e9cfc125542c7ff102c1b",
+    "sources.json": "bcb0a534cb7c1be4a8962d8f3db4e663ad7459b17991aea114e51b5c41658a2a",
+    "standard_reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7"
+  },
+  "categoryCode": "metric_g2",
+  "displayName": "对内部人员脚本采集"
+}

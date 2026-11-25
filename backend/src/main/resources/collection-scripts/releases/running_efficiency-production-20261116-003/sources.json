@@ -1,0 +1,180 @@
+{
+  "category": "running_efficiency",
+  "tasks": [
+    {
+      "db_type": "adb",
+      "sql": "WITH request_stats AS (SELECT page_name, request_url_simple, COUNT(*) AS visit_count, AVG(duration) AS avg_duration FROM appuser.ods_browser_request WHERE local_biz_system_name = 'CRM系统' AND accept_time > NOW() - INTERVAL 7 DAY  AND page_name NOT IN ('', '403错误', '错误提示', 'WPS WebOffice', '客户关系管理系统CRM') GROUP BY page_name, request_url_simple HAVING visit_count > 30), total_visits AS (SELECT SUM(visit_count) AS total_visit_count FROM request_stats), slow_requests AS (SELECT page_name, request_url_simple, visit_count, avg_duration FROM request_stats WHERE avg_duration > 3000) SELECT COUNT(*) AS \"慢请求个数\", SUM(visit_count) AS \"慢请求总访问量\", round((SUM(visit_count) / (SELECT total_visit_count FROM total_visits)) * 100, 4) AS \"慢请求访问量占比\" FROM slow_requests;",
+      "kind": "jdbc",
+      "dataset": "大于3s的请求访问量占比",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "WITH request_stats AS (SELECT page_name, request_url_simple, COUNT(*) AS visit_count, AVG(duration) AS avg_duration FROM appuser.ods_browser_request WHERE local_biz_system_name = 'CRM系统' AND accept_time > NOW() - INTERVAL 7 DAY AND page_name NOT IN ('', '403错误', '错误提示', 'WPS WebOffice', '客户关系管理系统CRM')  GROUP BY page_name, request_url_simple HAVING visit_count > 30), total_visits AS (SELECT SUM(visit_count) AS total_visit_count FROM request_stats), slow_requests AS (SELECT page_name, request_url_simple, visit_count, avg_duration FROM request_stats WHERE avg_duration > 3000) SELECT page_name as \"业务页面名称\", request_url_simple as \"请求URL（多种渠道端口，取其一）\", visit_count as \"访问次数\", round(avg_duration,0) AS  \"响应时长(ms)\"  FROM slow_requests ORDER BY round(avg_duration,0) DESC;",
+      "kind": "jdbc",
+      "dataset": "页面请求(按钮)响应时长大于3s",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "WITH page_stats AS (SELECT page_name, page_url_simple_hash, COUNT(*) AS visit_count, AVG(duration) AS avg_duration FROM appuser.ods_browser_page WHERE local_biz_system_name = 'CRM系统' AND accept_time > NOW() - INTERVAL 7 DAY  AND page_name NOT IN ('', '403错误', '错误提示', 'WPS WebOffice', '客户关系管理系统CRM') GROUP BY page_name, page_url_simple_hash HAVING visit_count > 30), total_visits AS (SELECT SUM(visit_count) AS total_visit_count FROM page_stats), slow_pages AS (SELECT page_name, page_url_simple_hash, visit_count, avg_duration FROM page_stats WHERE avg_duration > 3000) SELECT COUNT(*) AS \"慢加载页面个数\", SUM(visit_count) AS \"慢访问次数\", round((SUM(visit_count) / (SELECT total_visit_count FROM total_visits)) * 100, 2) AS \"慢访问占比（%）\" FROM slow_pages;",
+      "kind": "jdbc",
+      "dataset": "大于3s的页面访问量占比",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "WITH page_stats AS (SELECT page_name, page_url_simple_hash, COUNT(*) AS visit_count, AVG(duration) AS avg_duration FROM appuser.ods_browser_page WHERE local_biz_system_name = 'CRM系统' AND accept_time > NOW() - INTERVAL 7 DAY AND page_name NOT IN ('', '403错误', '错误提示', 'WPS WebOffice', '客户关系管理系统CRM')  GROUP BY page_name, page_url_simple_hash HAVING visit_count > 30), slow_pages AS (SELECT page_name, page_url_simple_hash, visit_count, avg_duration FROM page_stats WHERE avg_duration > 3000) SELECT page_name as \"页面名称\", page_url_simple_hash as \"页面URL\", visit_count as \"访问量\", ROUND(avg_duration, 0) AS \"平均加载时长\" FROM slow_pages;",
+      "kind": "jdbc",
+      "dataset": "加载时长大于3s的页面",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT  CASE local_application_id WHEN '01a01e24-4299-7cfc-9258-7cd3a0e50991' THEN '接口APP' WHEN '019e49dd-1a6c-7e48-9291-fc5d660f0a43' THEN '新一代CRM' WHEN '01a01e79-9fd6-742d-8207-c861af088f08' THEN 'CRM-WEB' ELSE local_application_id END AS \"应用\",count(1) as \"访问量\",cast(round(avg(duration),0) as varchar) as \"平均响应耗时\" from appuser.dwd_apm_trace_span_service where local_application_id in ('01a01e24-4299-7cfc-9258-7cd3a0e50991','019e49dd-1a6c-7e48-9291-fc5d660f0a43','01a01e79-9fd6-742d-8207-c861af088f08') and trace_kind ='APM'  and accept_time>= DATE_SUB(now(), INTERVAL 7 day) group by local_application_id order by \"应用\"",
+      "kind": "jdbc",
+      "dataset": "后端应用平均响应时长",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT application_name as \"应用\",cast(round(sum(value)/1000,0)as varchar)  as \"Full GC时长\" from appuser.ods_common_metric where application_name in ('CRM-web','新一代CRM','接口APP') and metric ='jvm.gc.full-gc.time' and accept_time >= DATE_SUB(now(), INTERVAL 7 day)  GROUP by application_name order by application_name",
+      "kind": "jdbc",
+      "dataset": "应用Full GC时长",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT count(1) as \"访问量\",round(avg(duration),0)  as \"平均响应耗时(ms)\" from appuser.dwd_apm_trace_span_service  where local_system_id ='019e49dc-ab60-7bfa-b55a-a07f35b0e4ff' and trace_kind ='APM' and service_type ='Accept URL' and url not like '%jsp' and accept_time >= DATE_SUB(now(), INTERVAL 5 DAY)",
+      "kind": "jdbc",
+      "dataset": "接口整体平均响应时长",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT COUNT(1) AS \"总访问量\",COUNT(CASE WHEN duration >= 1000 THEN 1 END) AS \"大于1秒的访问量\", ROUND( COUNT(CASE WHEN duration >= 1000 THEN 1 END) * 100.0 / COUNT(1), 2 ) AS \"占比(%)\"  FROM appuser.dwd_apm_trace_span_service  WHERE local_system_id = '019e49dc-ab60-7bfa-b55a-a07f35b0e4ff'  AND trace_kind = 'APM' and service_type ='Accept URL' and url not like '%jsp'  AND accept_time >= DATE_SUB(NOW(), INTERVAL 7 day);",
+      "kind": "jdbc",
+      "dataset": "大于1s的接口访问量占比",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT  count(1) as \"访问量\",round(avg(duration),0) as \"平均响应耗时(ms)\" from appuser.dwd_apm_trace_span_sql  where local_system_id ='019e49dc-ab60-7bfa-b55a-a07f35b0e4ff' and trace_kind ='APM' and call_type ='SQL' and accept_time >= DATE_SUB(now(), INTERVAL 7 day)",
+      "kind": "jdbc",
+      "dataset": "SQL整体平均响应时长",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT COUNT(1) AS \"总访问量\",COUNT(CASE WHEN duration >= 1000 THEN 1 END) AS \"大于1秒的访问量\" ,ROUND(COUNT(CASE WHEN duration >= 1000 THEN 1 END) * 100.0 / COUNT(1),4) AS \"占比(%)\" FROM appuser.dwd_apm_trace_span_sql WHERE local_system_id = '019e49dc-ab60-7bfa-b55a-a07f35b0e4ff' AND trace_kind = 'APM' AND call_type = 'SQL' AND accept_time >= DATE_SUB(NOW(), INTERVAL 7 day);",
+      "kind": "jdbc",
+      "dataset": "大于1s的SQL访问量占比",
+      "sub_category": "系统性能"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT COUNT(1) AS \"总访问量\", SUM(CASE WHEN status_code != '1' THEN 1 ELSE 0 END) AS \"失败量\", round((1- SUM(CASE WHEN status_code != '1' THEN 1 ELSE 0 END) / COUNT(1)) * 100, 4) AS \"成功率(%)\"  FROM appuser.dwd_apm_trace_span_service WHERE accept_time >= now() - INTERVAL 7 DAY AND trace_kind = 'APM' AND service_type = 'Accept URL' AND local_system_id = '019e49dc-ab60-7bfa-b55a-a07f35b0e4ff' AND service NOT LIKE '%/probe.jsp';",
+      "kind": "jdbc",
+      "dataset": "后端接口-整体失败次数、整体成功率",
+      "sub_category": "系统异常"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT service as \"CRM服务接口\", COUNT(1) AS \"访问量\", SUM(CASE WHEN status_code != '1' THEN 1 ELSE 0 END) AS \"失败量\", round((1-SUM(CASE WHEN status_code != '1' THEN 1 ELSE 0 END) / COUNT(1)) * 100, 2) AS \"成功率(%)\"  FROM appuser.dwd_apm_trace_span_service WHERE accept_time >= now() - INTERVAL 7 DAY AND trace_kind = 'APM' AND service_type = 'Accept URL' AND local_system_id = '019e49dc-ab60-7bfa-b55a-a07f35b0e4ff' AND service NOT LIKE '%/probe.jsp' GROUP BY service HAVING count(1) > 1000 ORDER BY \"成功率(%)\";",
+      "kind": "jdbc",
+      "dataset": "后端单个接口-失败次数、整体成功率",
+      "sub_category": "系统异常"
+    },
+    {
+      "db_type": "adb",
+      "sql": "WITH error_summary AS (SELECT error_type, message, page_url_simple_hash, COUNT(*) AS c FROM appuser.ods_browser_error WHERE local_biz_system_name = 'CRM系统' AND accept_time > now() - INTERVAL 7 DAY AND error_source_type = 'javascript' AND message NOT IN ('', 'Uncaught ReferenceError: android_apm is not defined', 'Script error.', 'Unhandled promise rejection: false') GROUP BY error_type, message, page_url_simple_hash HAVING c > 3000), total_records AS (SELECT COUNT(*) AS total_count FROM appuser.ods_browser_error WHERE local_biz_system_name = 'CRM系统' AND accept_time > now() - INTERVAL 7 DAY AND error_source_type = 'javascript' AND message NOT IN ('', 'Uncaught ReferenceError: android_apm is not defined', 'Script error.')) SELECT es.message as \"报错名称\", SUM(es.c) AS \"报错次数\", tr.total_count as \"总报错量\" FROM error_summary es, total_records tr GROUP BY es.message, tr.total_count ORDER BY \"报错次数\" DESC;",
+      "kind": "jdbc",
+      "dataset": "前端页面 JS 报错",
+      "sub_category": "系统异常"
+    },
+    {
+      "db_type": "adb",
+      "sql": "SELECT CASE application_id WHEN '01a01e24-4299-7cfc-9258-7cd3a0e50991' THEN '接口APP' WHEN '019e49dd-1a6c-7e48-9291-fc5d660f0a43' THEN '新一代CRM' WHEN '01a01e79-9fd6-742d-8207-c861af088f08' THEN 'CRM-WEB' ELSE application_id END AS \"应用\", type as \"异常名称\", count(`type`) as \"异常次数\" FROM appuser.ods_apm_exception WHERE application_id IN ('01a01e24-4299-7cfc-9258-7cd3a0e50991','019e49dd-1a6c-7e48-9291-fc5d660f0a43','01a01e79-9fd6-742d-8207-c861af088f08') AND type NOT IN ('com.ailk.biz.exception.BizException','com.ailk.common.BaseException') AND accept_time >= DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY application_id, type HAVING count(1) > 50 ORDER BY count(`type`) DESC;",
+      "kind": "jdbc",
+      "dataset": "后端应用异常报错",
+      "sub_category": "系统异常"
+    },
+    {
+      "name": "业务自定义返回码统计",
+      "days_ago": 32,
+      "handler": "default",
+      "payload": {
+        "statisticsType": 1,
+        "statistics": [
+          "system_resource_id",
+          "x_resultcode",
+          "system_resource_id"
+        ],
+        "systemId": "019e49dc-ab60-7bfa-b55a-a07f35b0e4ff",
+        "businessId": null,
+        "timeRange": null,
+        "endTime": null,
+        "startTime": null,
+        "dataMap": "{}",
+        "confirmDataMap": "{\"system_resource_id\":\"019e49dc-ab60-7bfa-b55a-a07f35b0e4ff\"}",
+        "businessType": null,
+        "segmentId": null,
+        "stepId": null,
+        "identify_character": null,
+        "total": 0,
+        "pageSize": 250,
+        "pageNum": 1,
+        "prop": "accessCount",
+        "order": "desc"
+      },
+      "fields": {
+        "x_resultcode": "业务自定义返回码",
+        "dealCount": "返回次数"
+      },
+      "exclude_empty_field": "x_resultcode",
+      "kind": "bpm",
+      "dataset": "前端页面-业务自定义返回码",
+      "sub_category": "系统异常"
+    },
+    {
+      "name": "自定义返回信息统计",
+      "days_ago": 28,
+      "handler": "default",
+      "payload": {
+        "statisticsType": 1,
+        "statistics": [
+          "system_resource_id",
+          "custom_res_info",
+          "system_resource_id"
+        ],
+        "systemId": "019e49dc-ab60-7bfa-b55a-a07f35b0e4ff",
+        "businessId": null,
+        "timeRange": null,
+        "endTime": null,
+        "startTime": null,
+        "dataMap": "{}",
+        "confirmDataMap": "{\"system_resource_id\":\"019e49dc-ab60-7bfa-b55a-a07f35b0e4ff\"}",
+        "businessType": null,
+        "segmentId": null,
+        "stepId": null,
+        "identify_character": null,
+        "total": 0,
+        "pageSize": 250,
+        "pageNum": 1,
+        "prop": "accessCount",
+        "order": "desc"
+      },
+      "fields": {
+        "system_name": "系统",
+        "custom_res_info": "自定义返回信息",
+        "dealCount": "返回次数"
+      },
+      "exclude_empty_field": "custom_res_info",
+      "min_value_field": "dealCount",
+      "min_value": 20,
+      "kind": "bpm",
+      "dataset": "前端页面-业务自定义返回异常",
+      "sub_category": "系统异常"
+    }
+  ]
+}

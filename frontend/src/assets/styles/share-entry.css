@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+
+/* 分享页指标详情弹窗：移动端限制整窗高度，内容区自己滚动，
+   避免「趋势图 + 定义 + 采集记录」把关闭按钮顶出屏幕。 */
+@media (max-width: 680px) {
+  .share-metric-dialog {
+    --el-dialog-margin-top: 3vh;
+    max-height: 94vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .share-metric-dialog .el-dialog__header {
+    flex: none;
+    padding: 12px 12px 8px;
+  }
+  .share-metric-dialog .el-dialog__title {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .share-metric-dialog .el-dialog__body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 12px 12px;
+  }
+  .share-metric-dialog .el-descriptions__label {
+    width: 84px;
+    font-size: 12px;
+  }
+}

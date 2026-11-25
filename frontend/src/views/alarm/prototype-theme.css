@@ -1,0 +1,37 @@
+/* 告警页只保留布局差异，通用外观由 workspace 组件和主题提供。 */
+.alarm-page { margin:-15px; min-height:calc(100% + 30px); padding:0; background:var(--ui-page); }
+.alarm-workspace-tabs { padding:20px 24px 24px; }
+.alarm-list-workspace { display:flex; flex-direction:column; gap:20px; min-width:0; }
+.alarm-table-panel { min-width:0; border:1px solid var(--ui-border); border-radius:var(--ui-radius-lg); background:var(--ui-surface); box-shadow:var(--ui-shadow-sm); overflow:hidden; }
+.summary-caption { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0; padding:14px 16px; border-bottom:1px solid var(--ui-border-soft); background:var(--ui-page); color:var(--ui-muted); font-size:12px; }
+.summary-caption strong { color:var(--ui-primary); }
+.summary-caption small { color:var(--ui-subtle); }
+.table-toolbar { padding:14px 16px; margin:0; gap:10px; flex-wrap:wrap; }
+.table-toolbar .toolbar-left { display:flex; gap:8px; flex-wrap:wrap; }
+.table-toolbar :deep(.el-button) { height:32px; margin:0; }
+.alarm-page :deep(.el-card) { border:1px solid var(--ui-border); border-radius:var(--ui-radius-lg); background:var(--ui-surface); box-shadow:var(--ui-shadow-sm); }
+.alarm-page :deep(.el-card__header) { padding:18px 20px; border-bottom:1px solid var(--ui-border); }
+.alarm-page :deep(.el-card__body) { padding:20px; }
+.alarm-page :deep(.el-table th.el-table__cell) { background:var(--ui-page); }
+.alarm-page :deep(.el-table .cell) { padding-left:12px; padding-right:12px; }
+.card-header { gap:12px; flex-wrap:wrap; }
+.card-header > div:first-child { flex:1; min-width:180px; color:var(--ui-heading); font-size:14px; font-weight:600; }
+.strategy-subtabs :deep(.el-tabs__item) { font-size:12px; color:var(--ui-muted); }
+.strategy-subtabs :deep(.el-tabs__item.is-active) { color:var(--ui-primary-strong); font-weight:600; }
+.strategy-subtabs :deep(.el-tabs__nav-wrap::after) { height:1px; background:var(--ui-border); }
+.strategy-subtabs :deep(.el-tab-pane) { display:flex; flex-direction:column; gap:16px; }
+.trend-header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.trend-tabs :deep(.el-radio-group) { display:flex; flex-wrap:wrap; padding:3px; background:var(--ui-page); border-radius:8px; }
+.trend-tabs :deep(.el-radio-button__inner) { border:0; border-radius:6px; background:none; color:var(--ui-muted); box-shadow:none; }
+.trend-tabs :deep(.el-radio-button.is-active .el-radio-button__inner) { background:var(--ui-surface); color:var(--ui-primary-strong); box-shadow:var(--ui-shadow-sm); }
+.trend-filters { display:flex; flex-wrap:wrap; gap:8px; }
+.trend-chart { width:100%; height:200px; }
+.trend-chart-wrapper { min-height:200px; }
+.drill-down-tip { padding:8px 12px; color:var(--ui-primary-strong); background:var(--ui-primary-soft); border-radius:8px; }
+.channel-config { background:var(--ui-field); border:1px solid var(--ui-border); border-radius:10px; }
+.alarm-page :deep(.el-dialog) { padding:0; max-width:calc(100vw - 24px); border-radius:16px; background:var(--ui-surface); overflow:hidden; }
+.alarm-page :deep(.el-dialog__header) { padding:20px 24px; margin:0; border-bottom:1px solid var(--ui-border); }
+.alarm-page :deep(.el-dialog__body) { padding:20px 24px; }
+.alarm-page :deep(.el-dialog__footer) { padding:14px 24px; background:var(--ui-page); border-top:1px solid var(--ui-border); }
+.mobile-cards .alarm-card { margin:12px; }
+@media(max-width:768px) { .alarm-page { margin:-10px; min-height:calc(100% + 20px); } .alarm-workspace-tabs { padding:12px 16px 16px; } .alarm-list-workspace { gap:16px; } .alarm-page :deep(.el-card__body) { padding:14px; } }

@@ -1,0 +1,129 @@
+{
+  "categoryCode": "system_run",
+  "datasets": {
+    "大于3s的请求访问量占比": [
+      {
+        "metricCode": "SR_REQ_ACCESS_SLOW_RATIO",
+        "field": "慢请求访问量占比",
+        "operation": "single"
+      }
+    ],
+    "页面请求(按钮)响应时长大于3s": [
+      {
+        "metricCode": "SR_REQ_SLOW_CNT",
+        "field": "响应时长(ms)",
+        "operation": "count_gt",
+        "constant": "3000"
+      }
+    ],
+    "大于3s的页面访问量占比": [
+      {
+        "metricCode": "SR_PG_ACCESS_SLOW_RATIO",
+        "field": "慢访问占比（%）",
+        "operation": "single"
+      }
+    ],
+    "加载时长大于3s的页面": [
+      {
+        "metricCode": "SR_PG_LOAD_SLOW_CNT",
+        "field": "平均加载时长",
+        "operation": "count_gt",
+        "constant": "3000"
+      }
+    ],
+    "后端应用平均响应时长": [
+      {
+        "metricCode": "SR_APP_RESP_TIME",
+        "field": "平均响应耗时",
+        "operation": "avg"
+      }
+    ],
+    "应用Full GC时长": [
+      {
+        "metricCode": "SR_APP_FULLGC_TIME",
+        "field": "Full GC时长",
+        "operation": "sum"
+      }
+    ],
+    "接口整体平均响应时长": [
+      {
+        "metricCode": "SR_API_RESP_TIME",
+        "field": "平均响应耗时(ms)",
+        "operation": "single"
+      }
+    ],
+    "大于1s的接口访问量占比": [
+      {
+        "metricCode": "SR_API_SLOW_RATIO",
+        "field": "占比(%)",
+        "operation": "single"
+      }
+    ],
+    "SQL整体平均响应时长": [
+      {
+        "metricCode": "SR_SQL_RESP_TIME",
+        "field": "平均响应耗时(ms)",
+        "operation": "single"
+      }
+    ],
+    "大于1s的SQL访问量占比": [
+      {
+        "metricCode": "SR_SQL_SLOW_RATIO",
+        "field": "占比(%)",
+        "operation": "single"
+      }
+    ],
+    "后端接口-整体失败次数、整体成功率": [
+      {
+        "metricCode": "error_interface_overall_rate",
+        "field": "成功率(%)",
+        "operation": "single"
+      }
+    ],
+    "后端单个接口-失败次数、整体成功率": [
+      {
+        "metricCode": "error_interface_failure_count",
+        "field": "失败量",
+        "operation": "count_gt"
+      },
+      {
+        "metricCode": "error_interface_success_rate",
+        "field": "成功率(%)",
+        "operation": "count_lt"
+      }
+    ],
+    "前端页面 JS 报错": [
+      {
+        "metricCode": "error_js_type_count",
+        "field": "报错名称",
+        "operation": "distinct_count"
+      },
+      {
+        "metricCode": "error_js_single_count",
+        "field": "报错次数",
+        "operation": "count_gt"
+      }
+    ],
+    "后端应用异常报错": [
+      {
+        "metricCode": "error_instance_count",
+        "field": "异常次数",
+        "operation": "count_gt"
+      }
+    ],
+    "前端页面-业务自定义返回码": [
+      {
+        "metricCode": "error_return_code_count",
+        "field": "业务自定义返回码",
+        "operation": "distinct_count"
+      }
+    ],
+    "前端页面-业务自定义返回异常": [
+      {
+        "metricCode": "error_biz_return_count",
+        "field": "自定义返回信息",
+        "operation": "keyword_match"
+      }
+    ]
+  }
+}

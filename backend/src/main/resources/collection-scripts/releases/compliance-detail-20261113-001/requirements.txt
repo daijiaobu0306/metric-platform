@@ -1,0 +1,1 @@
+# Worker and TXT reader require only Python 3.10+ standard library.

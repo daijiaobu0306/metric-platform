@@ -1,0 +1,10 @@
+.followed-issues-section { min-width:0; padding:20px; border:1px solid var(--ui-border); border-radius:16px; background:var(--ui-surface); }
+.obs-section-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:14px; border-bottom:1px solid var(--ui-border-soft); }
+h2 { display:flex; align-items:center; gap:8px; margin:0; font-size:14px; color:var(--ui-heading); font-weight:650; } h2 > i { width:5px; height:16px; border-radius:4px; background:var(--ui-warning); }
+.issue-count { padding:2px 7px; border:1px solid color-mix(in srgb,var(--ui-warning) 25%,var(--ui-surface)); border-radius:20px; color:var(--ui-warning); background:var(--ui-warning-soft); font-size:10px; font-weight:400; }
+.followed-issue-list { display:flex; flex-direction:column; gap:12px; max-height:440px; overflow:auto; scrollbar-width:thin; }
+.followed-issue-card { padding:13px 14px; border:1px solid var(--ui-border); border-radius:12px; background:var(--ui-page); }
+.issue-card-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }.issue-card-label { display:flex; align-items:center; gap:6px; font-weight:600; font-size:11px; color:var(--ui-heading); }.issue-dot { width:6px; height:6px; border-radius:50%; background:var(--ui-warning); }.issue-elapsed { color:var(--ui-muted); font-size:10px; }
+p { margin:12px 0; color:var(--ui-text); line-height:1.9; font-size:12px; white-space:pre-wrap; overflow-wrap:anywhere; }
+footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; padding-top:10px; border-top:1px solid var(--ui-border-soft); color:var(--ui-subtle); font-family:Consolas,"Microsoft YaHei",monospace; font-size:10px; }
+footer :deep(.el-button) { font-size:11px; }

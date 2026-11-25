@@ -1,0 +1,17 @@
+[Unit]
+Description=Staging 轮询部署（替代 Gitee Webhook）
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/metric-staging
+ExecStart=/bin/bash /opt/metric-staging/deploy/scripts/staging-poll-deploy.sh
+# 不要再 append: 到 poll-deploy.log —— 脚本里的 log() 已经用 tee -a 写了一份，
+# systemd 再把 tee 的 stdout 追加到同一个文件会导致每行重复两遍（2026-09-10 修）。
+# 改走 journal：文件里保持一份干净的，journalctl -u staging-poll 也能查。
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,96 @@
+/* ============================================================================
+ * metric-tokens.css
+ * ----------------------------------------------------------------------------
+ * 设计 token 单一真相源。所有 metric-* 变量集中定义，组件 / 页面 / EP 桥接
+ * 都从这里读。
+ *
+ * 数据源：
+ *   - 原型 `前端原型参考/public/theme-switcher.css` 的 11 个 --theme-* 变量
+ *   - 原型 5 阶 brand 调色板（tailwind.config.brand）
+ *   - 原型实际使用到的业务语义色 / 字号 / 圆角 / 阴影 / 字体
+ *
+ * 命名约定：
+ *   - 全平台统一 `--metric-*` 前缀，避免与原型 `--theme-*` 混用
+ *   - 原型 → 平台对应表（11 核心 + 5 brand）：
+ *     原型                          → 平台
+ *     --theme-primary                → --metric-primary
+ *     --theme-primary-hover          → --metric-primary-hover
+ *     --theme-primary-soft           → --metric-primary-soft
+ *     --theme-primary-border         → --metric-primary-border
+ *     --theme-canvas                 → --metric-canvas
+ *     --theme-surface-soft           → --metric-surface-soft
+ *     --theme-border                 → --metric-border
+ *     --theme-border-strong          → --metric-border-strong
+ *     --theme-text                   → --metric-text
+ *     --theme-text-secondary         → --metric-text-secondary
+ *     --theme-text-muted             → --metric-text-muted
+ *
+ * 主题扩展（预留，未启用）：
+ *   - 当前只做 default 一套。预留 :root[data-theme="..."] 切换位
+ *   - 加新主题只需在下面追加 :root[data-theme="xxx"] { --metric-*: ...; }
+ *   - 不需要改任何组件代码
+ *
+ * 部署约束：所有 token 必须是本地静态值，不允许 url() 引用外部资源。
+ * ============================================================================ */
+
+:root,
+:root[data-theme="default"] {
+  /* === 11 核心 token === */
+  --metric-primary:        #0284c7;  /* 主色 = 原型 brand-600 / sky-600 */
+  --metric-primary-hover:  #0369a1;  /* hover 加深 */
+  --metric-primary-soft:   #f0f9ff;  /* 选中背景 / tag 底色 */
+  --metric-primary-border: #bae6fd;  /* 描边 / 分割 */
+  --metric-canvas:         #f4f6f9;  /* 整页背景 */
+  --metric-surface-soft:   #f8fafc;  /* 卡片二级背景 */
+  --metric-border:         #e2e8f0;  /* 通用描边 */
+  --metric-border-strong:  #cbd5e1;  /* 强调描边 */
+  --metric-text:           #0f172a;  /* 标题 / 主文 */
+  --metric-text-secondary: #475569;  /* 副文 */
+  --metric-text-muted:     #94a3b8;  /* 占位 / 辅助 */
+
+  /* === 5 阶 brand（与 EP 主色梯度对齐） === */
+  --metric-brand-50:  #f0f9ff;
+  --metric-brand-100: #e0f2fe;
+  --metric-brand-500: #0ea5e9;
+  --metric-brand-600: #0284c7;
+  --metric-brand-700: #0369a1;
+
+  /* === 业务语义色（带 soft 配对） === */
+  --metric-success:        #10b981;
+  --metric-success-soft:   #ecfdf5;
+  --metric-warning:        #f59e0b;
+  --metric-warning-soft:   #fffbeb;
+  --metric-danger:         #f43f5e;
+  --metric-danger-soft:    #fff1f2;
+  --metric-special:        #8b5cf6;
+  --metric-special-soft:   #f5f3ff;
+
+  /* === 字号阶梯（原型实际使用） === */
+  --metric-text-2xs: 10px;
+  --metric-text-xs:  12px;  /* 主正文 / 表格 cell */
+  --metric-text-sm:  14px;  /* tab 标题 / 卡片标题 */
+  --metric-text-md:  16px;  /* 弹窗大标题 */
+  --metric-text-lg:  18px;
+  --metric-text-xl:  20px;
+  --metric-text-2xl: 24px;
+  --metric-text-3xl: 30px;  /* KPI 主卡大字 */
+
+  /* === 圆角 === */
+  --metric-radius-sm: 8px;     /* 子元素 */
+  --metric-radius:    12px;    /* 默认 */
+  --metric-radius-lg: 16px;    /* 容器 */
+  --metric-radius-pill: 999px; /* 胶囊 */
+
+  /* === 阴影 === */
+  --metric-shadow-xs: 0 1px 2px rgb(0 0 0 / .04);
+  --metric-shadow-sm: 0 1px 3px rgb(0 0 0 / .06);
+  --metric-shadow-md: 0 4px 12px rgb(15 23 42 / .08);
+  --metric-shadow-lg: 0 16px 36px rgb(15 23 42 / .16);
+  --metric-shadow-modal: 0 24px 70px rgb(15 23 42 / .26);
+
+  /* === 字体栈（系统字体，部署无外网依赖） === */
+  --metric-font-sans: system-ui, -apple-system, "Segoe UI", "PingFang SC",
+                      "Microsoft YaHei", sans-serif;
+  --metric-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+                      Monaco, Consolas, monospace;
+}

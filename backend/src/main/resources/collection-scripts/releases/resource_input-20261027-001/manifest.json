@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 1,
+  "version": "resource_input-20261027-001",
+  "entry": "reader.py",
+  "files": {
+    "config.json": "49eb04bad9a251d08fcc5681bf0d9b89971246381514f6393632d5a15c6f0fc3",
+    "reader.py": "946b1bee80caf9dd902029ef6f5cec8b8e00c3480c29a9300772de1c6120b1c7",
+    "requirements-xlsx.txt": "290af5eae2f37443bbcce5e012d8833e4e91c1863fc754cefdbafdef9005dcf0",
+    "requirements.txt": "335e37e97c9e72b331e30e8919a17cae4754ef34420de137815fc1da86ed788d"
+  },
+  "categoryCode": "resourceInput",
+  "displayName": "资源投入脚本采集"
+}

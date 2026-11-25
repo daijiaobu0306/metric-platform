@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-status-bar-style" content="black" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>指标体系平台</title>
+    <script>
+      // ===== Silent SSO 早期重定向（避免闪现登录页）=====
+      // 浏览器从 Usermnanager「产品服务」点 metric-code 图标 → 落到本 SPA 任意路径。
+      // 若 sessionStorage 没有 sessionKey（非公开路径），在 JS 包加载前就 window.location.replace
+      // 到 /api/sso/silent-entry，避免：① 渲染 SPA shell ② router.beforeEach 跳 /login
+      // ③ Login.vue onMounted 再 replace 到 silent-entry — 这 3 步加起来 0.5 秒白屏。
+      // 登录、SSO 回调、会话过期和只读专屏分享入口（移动端 /screen/s/、PC 端 /screen/pc/s/）由前端自行处理。
+      (function () {
+        try {
+          var key = sessionStorage.getItem('sessionKey');
+          var path = window.location.pathname;
+          // PC 分享页要走平台入口（复用专屏页面组件），但它同样是匿名只读页面，
+          // 不能被这里的 silent SSO 提前重定向到统一认证。
+          var isPublic = /^(?:\/metric-code)?\/screen\/(?:pc\/)?s\/[A-Za-z0-9_-]+\/?$/.test(path)
+            || path.indexOf('/login') !== -1
+            || path.indexOf('/sso/') !== -1
+            || path.indexOf('/session-expired') !== -1;
+          if (!key && !isPublic) {
+            var target = (path && path !== '/' && path !== '/index.html') ? path : '/';
+            window.location.replace('/metric-code/api/sso/silent-entry?target=' + encodeURIComponent(target));
+          }
+        } catch (e) { /* sessionStorage 不可用时静默 */ }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+<!-- webhook e2e test - safe to remove -->
+<!-- e2e test real -->
+<!-- clean test after webhook fix -->
+<!-- e2e real test after SG fix - clean -->

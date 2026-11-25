@@ -1,0 +1,29 @@
+location /metric-code/ {
+    alias /home/appuser/besinsight/app/bws-html/metric_code/frontend/;
+    index index.html;
+    try_files $uri $uri/ /metric-code/index.html;
+    access_log /home/appuser/besinsight/component/bws/logs/metric-code-frontend-access.log;
+    error_log /home/appuser/besinsight/component/bws/logs/metric-code-frontend-error.log;
+}
+
+
+location /metric-code/api/ {
+    rewrite ^/metric-code/api/(.*) /$1 break;
+    proxy_pass http://192.168.1.18:18080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_connect_timeout 60s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+    access_log /home/appuser/besinsight/component/bws/logs/metric-code-api-access.log;
+    error_log /home/appuser/besinsight/component/bws/logs/metric-code-api-error.log;
+}
+
+
+location ~* /metric-code/.*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+    alias /home/appuser/besinsight/app/bws-html/metric_code/frontend/;
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+}

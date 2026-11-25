@@ -1,0 +1,25 @@
+-- V35: 用户会话跟踪表
+CREATE TABLE IF NOT EXISTS user_session (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+    session_key     VARCHAR(64)  NOT NULL COMMENT '前端生成的会话标识(sessionStorage)',
+    username        VARCHAR(50)  NOT NULL DEFAULT '管理员' COMMENT '用户名',
+    client_ip       VARCHAR(50)  DEFAULT '' COMMENT '客户端IP',
+    user_agent      VARCHAR(500) DEFAULT '' COMMENT '完整 User-Agent',
+    browser_name    VARCHAR(50)  DEFAULT '' COMMENT '浏览器名称',
+    browser_version VARCHAR(20)  DEFAULT '' COMMENT '浏览器版本',
+    os_name         VARCHAR(50)  DEFAULT '' COMMENT '操作系统',
+    device_type     VARCHAR(20)  DEFAULT 'desktop' COMMENT '设备类型: desktop/tablet/mobile',
+    screen_width    INT          DEFAULT 0 COMMENT '屏幕宽度',
+    screen_height   INT          DEFAULT 0 COMMENT '屏幕高度',
+    login_time      DATETIME     NOT NULL COMMENT '登录时间',
+    last_heartbeat  DATETIME     NOT NULL COMMENT '最后心跳时间',
+    duration_minutes INT         DEFAULT 0 COMMENT '已登录时长(分钟)',
+    is_active       INT          DEFAULT 1 COMMENT '是否活跃: 1=活跃 0=已结束',
+    logout_time     DATETIME     DEFAULT NULL COMMENT '离开/结束时间',
+    create_time     DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    update_time     DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_session_key (session_key),
+    INDEX idx_login_time (login_time),
+    INDEX idx_username (username),
+    INDEX idx_is_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户会话跟踪';
